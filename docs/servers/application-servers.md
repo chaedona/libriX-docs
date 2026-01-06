@@ -1,4 +1,5 @@
 # 애플리케이션 서버 관리
+<img width="939" height="823" alt="image" src="https://github.com/user-attachments/assets/7ef4baf2-a38e-4c1d-845d-77dae46bc49c" />
 
 ## 개요
 
