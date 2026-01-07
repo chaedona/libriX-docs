@@ -24,14 +24,14 @@ docs/
 
 ### 서버 관리
 
-- [애플리케이션 서버 관리](docs/server/application-server.md)
+- [애플리케이션 서버 관리](docs/servers/application-server.md)
   - 애플리케이션 서버 목록 및 관리
   - 서버 생성 및 구성
   - 웹 컨테이너, EJB 컨테이너 설정
   - 트랜잭션 서비스, ORB 서비스
   - JVM 설정 및 로그 관리
 
-- [웹서버 관리](docs/server/web-server.md)
+- [웹서버 관리](docs/servers/web-server.md)
   - 웹서버 목록 및 관리
   - 웹서버 생성 및 구성
   - 플러그인 생성 및 전파
