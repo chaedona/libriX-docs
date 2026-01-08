@@ -173,7 +173,7 @@ Open Liberty 프로세스로 애플리케이션을 실행합니다.
 
 서버 메뉴의 "클러스터" 링크를 선택하면 현재 LibriX에 정의된 모든 클러스터의 목록이 표시됩니다.
 
-![클러스터 목록 화면](images/cluster_list.png)
+![클러스터 목록 화면](images/cluster/cluster_list.png)
 
 ### 클러스터 목록 화면 구성
 
@@ -289,7 +289,7 @@ Open Liberty 프로세스로 애플리케이션을 실행합니다.
 
 첫 번째 단계에서는 클러스터의 기본 정보를 입력합니다.
 
-![클러스터 생성 1단계 화면](images/cluster_create_step1.png)
+![클러스터 생성 1단계 화면](images/cluster/cluster_create_step1.png)
 
 #### 클러스터 정보 입력
 
@@ -341,7 +341,7 @@ LibriX는 이 과정을 단계별로 나누어 더 직관적으로 제공합니�
 
 두 번째 단계에서는 클러스터에 포함할 애플리케이션 서버를 선택합니다.
 
-![클러스터 멤버 작성 화면 - 초기](images/cluster_create_step2_before.png)
+![클러스터 멤버 작성 화면 - 초기](images/cluster/cluster_create_step2_before.png)
 
 #### 클러스터 멤버에 관한 정보
 
@@ -376,13 +376,13 @@ LibriX는 이 과정을 단계별로 나누어 더 직관적으로 제공합니�
 
 **초기 상태**
 
-![클러스터 멤버 작성 - 초기 상태](images/cluster_create_step2_before.png)
+![클러스터 멤버 작성 - 초기 상태](images/cluster/cluster_create_step2_before.png)
 
 멤버를 추가하기 전에는 "없음"으로 표시되며, 총계는 0입니다.
 
 **멤버 추가 후**
 
-![클러스터 멤버 작성 - 멤버 추가 후](images/cluster_create_step2_after.png)
+![클러스터 멤버 작성 - 멤버 추가 후](images/cluster/cluster_create_step2_after.png)
 
 멤버를 추가하면 다음 정보가 테이블에 표시됩니다:
 
@@ -488,7 +488,7 @@ LibriX는 이 과정을 단계별로 나누어 더 직관적으로 제공합니�
 
 세 번째 단계에서는 입력한 정보를 최종 확인하고 클러스터 생성을 완료합니다.
 
-![클러스터 확인 화면](images/cluster_create_step3.png)
+![클러스터 확인 화면](images/cluster/cluster_create_step3.png)
 
 #### 확인 정보
 
