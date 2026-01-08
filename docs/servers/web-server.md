@@ -10,7 +10,7 @@
 
 웹서버 메뉴를 선택하면 현재 LibriX에 등록된 모든 웹서버의 목록이 표시됩니다.
 
-![웹서버 목록 화면](images/web_server_list.png)
+![웹서버 목록 화면](images/web_server/web_server_list.png)
 
 ### 웹서버 목록 화면 구성
 
@@ -48,7 +48,7 @@
 
 **주의**: 웹서버를 선택하지 않고 "플러그인 생성" 탭을 클릭하면 다음과 같은 오류 메시지가 표시됩니다:
 
-![플러그인 생성 오류 메시지](images/web_server_plugin_error.png)
+![플러그인 생성 오류 메시지](images/web_server/web_server_plugin_error.png)
 
 "플러그인 파일을 생성할 웹 서버를 선택하십시오."
 
@@ -58,7 +58,7 @@
 
 플러그인 생성이 성공적으로 완료되면 화면 상단에 다음과 같은 메시지가 표시됩니다:
 
-![플러그인 생성 성공 메시지](images/web_server_plugin_success.png)
+![플러그인 생성 성공 메시지](images/web_server/web_server_plugin_success.png)
 
 "[웹서버이름]의 플러그인 파일이 [파일경로] 위치에 생성되었습니다."
 
@@ -215,7 +215,7 @@ LibriX에서는 플러그인 구성 파일이 변경될 때마다 자동으로 �
 
 첫 번째 단계에서는 작성할 웹서버가 실행될 노드를 선택하고, 웹서버의 유형을 지정합니다.
 
-![웹서버 생성 1단계 화면](images/web_server_create_step1.png)
+![웹서버 생성 1단계 화면](images/web_server/web_server_create_step1.png)
 
 #### 웹 서버의 노드 선택 후 웹 서버 유형 선택
 
@@ -259,7 +259,7 @@ LibriX에서는 플러그인 구성 파일이 변경될 때마다 자동으로 �
 
 두 번째 단계에서는 웹서버의 상세 특성을 입력합니다.
 
-![웹서버 생성 2단계 화면](images/web_server_create_step2.png)
+![웹서버 생성 2단계 화면](images/web_server/web_server_create_step2.png)
 
 #### 새 웹 서버의 특성 입력
 
@@ -309,7 +309,7 @@ LibriX에서는 플러그인 구성 파일이 변경될 때마다 자동으로 �
 
 세 번째 단계에서는 입력한 정보를 최종 확인하고 웹서버 작성을 완료합니다.
 
-![웹서버 생성 3단계 화면](images/web_server_create_step3.png)
+![웹서버 생성 3단계 화면](images/web_server/web_server_create_step3.png)
 
 #### 새 웹 서버 확인
 
@@ -344,7 +344,7 @@ LibriX에서는 플러그인 구성 파일이 변경될 때마다 자동으로 �
 
 웹서버 작성이 완료되면 화면 상단에 다음과 같은 메시지 박스가 표시됩니다:
 
-![웹서버 생성 완료 화면](images/web_server_create_complete.png)
+![웹서버 생성 완료 화면](images/web_server/web_server_create_complete.png)
 
 **메시지**
 
@@ -388,7 +388,7 @@ LibriX에서는 플러그인 구성 파일이 변경될 때마다 자동으로 �
 
 웹서버 목록에서 웹서버 이름을 클릭하면 해당 웹서버의 상세 정보 페이지로 이동합니다. 웹서버 상세 페이지에서는 웹서버의 기본 설정을 조회하고 변경할 수 있습니다.
 
-![웹서버 상세 정보 화면](images/web_server_detail.png)
+![웹서버 상세 정보 화면](images/web_server/web_server_detail.png)
 
 ### 구성 탭
 
