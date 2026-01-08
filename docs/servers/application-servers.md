@@ -8,7 +8,7 @@
 
 애플리케이션 서버 메뉴를 선택하면 현재 LibriX에 등록된 모든 애플리케이션 서버의 목록이 표시됩니다.
 
-![애플리케이션 서버 목록 화면](images/app_server_list.png)
+![애플리케이션 서버 목록 화면](images/application-server/app_server_list.png)
 
 ### 서버 목록 화면 구성
 
@@ -104,7 +104,7 @@
 
 첫 번째 단계에서는 작성할 서버에 해당하는 호스트를 선택합니다.
 
-![서버 생성 1단계 화면](images/app_server_create_step1.png)
+![서버 생성 1단계 화면](images/application-server/app_server_create_step1.png)
 
 #### 호스트 선택 필드
 
@@ -142,7 +142,7 @@ Open Liberty 서버가 사용할 플랫폼 에디션을 지정합니다. 선택 
 
 두 번째 단계에서는 입력한 정보를 확인하고 서버 생성을 완료합니다.
 
-![서버 생성 2단계 화면](images/app_server_create_step2.png)
+![서버 생성 2단계 화면](images/application-server/app_server_create_step2.png)
 
 #### 확인 정보
 
@@ -189,7 +189,7 @@ Open Liberty 서버가 사용할 플랫폼 에디션을 지정합니다. 선택 
 
 "자장하거나 버리기 전 변경사항 검토" 링크를 클릭하면 변경사항 검토 화면이 표시됩니다.
 
-![변경사항 검토 화면](images/app_server_review.png)
+![변경사항 검토 화면](images/application-server/app_server_review.png)
 
 #### 저장 화면
 
@@ -234,7 +234,7 @@ Open Liberty 서버가 사용할 플랫폼 에디션을 지정합니다. 선택 
 
 서버 상세 페이지의 "구성" 탭에서는 서버의 기본 속성과 설정을 관리할 수 있습니다.
 
-![서버 구성 - 일반 특성](images/app_server_config_general.png)
+![서버 구성 - 일반 특성](images/application-server/app_server_config_general.png)
 
 #### 일반 특성
 
@@ -293,7 +293,7 @@ Open Liberty 서버가 사용할 플랫폼 에디션을 지정합니다. 선택 
 
 "웹 컨테이너" 링크를 클릭하면 웹 컨테이너의 상세 설정 화면이 표시됩니다.
 
-![웹 컨테이너 설정 화면](images/web_container_config.png)
+![웹 컨테이너 설정 화면](images/application-server/web_container_config.png)
 
 **일반 특성**
 
@@ -384,7 +384,7 @@ SSL/TLS 보안 연결에 대한 설정을 구성합니다:
 
 "세션 관리" 링크를 클릭하면 HTTP 세션 관리 정책을 구성할 수 있는 화면이 표시됩니다.
 
-![세션 관리 설정 화면](images/session_management.png)
+![세션 관리 설정 화면](images/application-server/session_management.png)
 
 **일반 특성**
 
@@ -431,7 +431,7 @@ SSL/TLS 보안 연결에 대한 설정을 구성합니다:
 
 "EJB 컨테이너 및 캐시 설정" 링크를 클릭하면 EJB 컨테이너의 캐시 관련 설정을 관리할 수 있는 화면이 표시됩니다.
 
-![EJB 컨테이너 및 캐시 설정 화면](images/ejb_container.png)
+![EJB 컨테이너 및 캐시 설정 화면](images/application-server/ejb_container.png)
 
 **일반 특성**
 
@@ -497,7 +497,7 @@ EJB 컨테이너의 캐시 관련 속성을 설정할 수 있습니다:
 
 "트랜잭션 서비스" 링크를 클릭하면 트랜잭션 관리 서비스의 설정을 관리할 수 있는 화면이 표시됩니다.
 
-![트랜잭션 서비스 설정 화면](images/transaction_service.png)
+![트랜잭션 서비스 설정 화면](images/application-server/transaction_service.png)
 
 **일반 특성**
 
@@ -555,7 +555,7 @@ EJB 컨테이너의 캐시 관련 속성을 설정할 수 있습니다:
 
 "ORB 서비스" 링크를 클릭하면 Object Request Broker (ORB) 서비스의 설정을 관리할 수 있는 화면이 표시됩니다.
 
-![ORB 서비스 설정 화면](images/orb_service.png)
+![ORB 서비스 설정 화면](images/application-server/orb_service.png)
 
 **일반 특성**
 
@@ -613,7 +613,7 @@ ORB 서비스는 분산 객체 간의 통신을 지원하며, 엔터프라이즈
 
 "설치된 애플리케이션" 링크를 클릭하면 현재 서버에 설치된 애플리케이션 목록과 상태를 확인할 수 있는 화면이 표시됩니다.
 
-![설치된 애플리케이션 화면](images/installed_applications.png)
+![설치된 애플리케이션 화면](images/application-server/installed_applications.png)
 
 **애플리케이션 목록**
 
@@ -652,7 +652,7 @@ ORB 서비스는 분산 객체 간의 통신을 지원하며, 엔터프라이즈
 
 "프로세스 정의" 링크를 클릭하면 JVM(Java Virtual Machine) 프로세스의 설정을 관리할 수 있는 화면이 표시됩니다.
 
-![프로세스 정의 설정 화면](images/process_definition.png)
+![프로세스 정의 설정 화면](images/application-server/process_definition.png)
 
 **일반 특성**
 
@@ -721,7 +721,7 @@ JVM 힙 메모리 크기를 설정합니다:
 
 "포트 설정" 링크를 클릭하면 서버가 사용하는 모든 포트의 설정을 관리할 수 있는 화면이 표시됩니다.
 
-![포트 설정 화면](images/port_settings.png)
+![포트 설정 화면](images/application-server/port_settings.png)
 
 **포트 설정 목록**
 
@@ -776,7 +776,7 @@ JVM 힙 메모리 크기를 설정합니다:
 
 "진단 추적 서비스" 링크를 클릭하면 서버의 진단 및 추적 기능을 설정할 수 있는 화면이 표시됩니다.
 
-![진단 추적 서비스 설정 화면](images/diagnostic_trace.png)
+![진단 추적 서비스 설정 화면](images/application-server/diagnostic_trace.png)
 
 **일반 특성**
 
