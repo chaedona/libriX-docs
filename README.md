@@ -28,7 +28,9 @@ docs/
 
 Open Liberty 애플리케이션 서버를 LibriX에서 관리하는 방법을 설명합니다.
 
-**주요 내용:**
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
 - 애플리케이션 서버 목록 및 상태 모니터링
 - 서버 생성 및 구성 (2단계 프로세스)
 - 서버 생명주기 관리 (시작, 중지, 재시작)
@@ -45,11 +47,15 @@ Open Liberty 애플리케이션 서버를 LibriX에서 관리하는 방법을 �
 
 **스크린샷:** 12개
 
+</details>
+
 #### [웹서버 관리](docs/server/web-server.md)
 
 IBM HTTP Server 또는 Apache HTTP Server를 LibriX에서 관리하는 방법을 설명합니다.
 
-**주요 내용:**
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
 - 웹서버 목록 및 상태 모니터링
 - 웹서버 생성 및 구성 (3단계 프로세스)
 - 플러그인 생성 및 관리
@@ -62,11 +68,15 @@ IBM HTTP Server 또는 Apache HTTP Server를 LibriX에서 관리하는 방법을
 
 **스크린샷:** 8개
 
+</details>
+
 #### [세션 서버 관리](docs/server/session-server.md)
 
 JCache 기반 세션 서버를 LibriX에서 관리하는 방법을 설명합니다.
 
-**주요 내용:**
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
 - LibriX와 Open Liberty/WebSphere Liberty의 관계
 - Liberty XML 편집의 복잡성 vs LibriX UI 접근
 - 세션 서버 목록 및 상태 모니터링
@@ -82,13 +92,17 @@ JCache 기반 세션 서버를 LibriX에서 관리하는 방법을 설명합니�
 
 **스크린샷:** 3개
 
+</details>
+
 ### 환경 관리
 
 #### [세션 도메인 관리](docs/environment/session-domain.md)
 
 세션 데이터를 공유하는 서버 그룹(세션 도메인)을 LibriX에서 관리하는 방법을 설명합니다.
 
-**주요 내용:**
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
 - LibriX와 Open Liberty/WebSphere Liberty의 관계
 - Liberty 구성 방식 vs LibriX 접근
 - 세션 도메인 개요 및 역할
@@ -105,6 +119,8 @@ JCache 기반 세션 서버를 LibriX에서 관리하는 방법을 설명합니�
 - 모범 사례
 
 **스크린샷:** 3개
+
+</details>
 
 ## LibriX의 가치 제안
 
