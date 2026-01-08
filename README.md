@@ -10,10 +10,12 @@ docs/
 │   ├── application-server.md       # 애플리케이션 서버 관리
 │   ├── web-server.md               # 웹서버 관리
 │   ├── session-server.md           # 세션 서버 관리
+│   ├── cluster.md                  # 클러스터 관리
 │   └── images/
 │       ├── app_server/             # 애플리케이션 서버 이미지 (12개)
 │       ├── web_server/             # 웹서버 이미지 (8개)
-│       └── session_server/         # 세션 서버 이미지 (3개)
+│       ├── session_server/         # 세션 서버 이미지 (3개)
+│       └── cluster/                # 클러스터 이미지 (5개)
 └── environment/                    # 환경 관리 문서
     ├── session-domain.md           # 세션 도메인 관리
     └── images/
@@ -94,6 +96,31 @@ JCache 기반 세션 서버를 LibriX에서 관리하는 방법을 설명합니�
 
 </details>
 
+#### [클러스터 관리](docs/server/cluster.md)
+
+여러 애플리케이션 서버를 하나의 논리적 그룹으로 관리하는 클러스터 기능을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- LibriX와 WebSphere ND NodeAgent 아키텍처
+- Liberty Collective vs NodeAgent 방식 비교
+- 클러스터 목록 및 상태 모니터링
+- 클러스터 관리 탭 (생성, 삭제, 시작, 중지, 즉시 중지)
+- 클러스터 생성 (3단계 프로세스)
+  - 1단계: 클러스터 정보 입력
+  - 2단계: 클러스터 멤버 작성
+  - 3단계: 새 클러스터 확인
+- 클러스터와 애플리케이션 서버
+- 클러스터 설계 고려사항
+- 클러스터 모니터링
+- 문제 해결
+- 운영 모범 사례
+
+**스크린샷:** 5개
+
+</details>
+
 ### 환경 관리
 
 #### [세션 도메인 관리](docs/environment/session-domain.md)
@@ -166,7 +193,6 @@ LibriX는 Open Liberty 및 WebSphere Liberty를 기반으로 하며, Liberty의 
 
 다음 문서들이 추가될 예정입니다:
 
-- **클러스터 관리**: 애플리케이션 서버 클러스터 구성 및 관리
 - **데이터소스 관리**: 데이터베이스 연결 풀 구성
 - **보안 관리**: 보안 도메인, 인증, 권한 부여
 - **모니터링**: 성능 모니터링 및 통계
