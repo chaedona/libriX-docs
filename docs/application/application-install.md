@@ -1,4 +1,3 @@
-
 # 애플리케이션 설치
 
 ## 개요
@@ -176,7 +175,7 @@ LibriX는 애플리케이션 배포 과정을 다단계 마법사로 간소화�
 
 첫 번째 단계에서는 배포할 애플리케이션 파일을 LibriX 관리콘솔에 업로드합니다.
 
-![애플리케이션 업로드 화면](images/app_install_step1.png)
+![애플리케이션 업로드 화면](images/app_install/app_install_step1.png)
 
 #### 애플리케이션 업로드 섹션
 
@@ -251,7 +250,7 @@ LibriX는 WebSphere ND와 유사한 파일 선택 인터페이스를 제공하�
 
 두 번째 단계에서는 애플리케이션의 기본 설정을 구성합니다.
 
-![설치 옵션 선택 화면](images/app_install_step2.png)
+![설치 옵션 선택 화면](images/app_install/app_install_step2.png)
 
 #### 설치 옵션 선택 안내
 
@@ -644,7 +643,7 @@ Liberty의 server.xml에서는 ibm-web-ext.xml 파일에서 다음과 같이 표
 
 세 번째 단계에서는 애플리케이션을 배포할 대상 서버 또는 클러스터를 선택합니다.
 
-![배포할 서버 선택 화면](images/app_install_step3.png)
+![배포할 서버 선택 화면](images/app_install/app_install_step3.png)
 
 #### 배포할 서버 선택 개요
 
@@ -896,7 +895,7 @@ LibriX의 장점:
 
 네 번째 단계에서는 애플리케이션에 가상 호스트를 매핑합니다.
 
-![가상호스트 설정 화면](images/app_install_step4.png)
+![가상호스트 설정 화면](images/app_install/app_install_step4.png)
 
 #### 가상호스트 설정 개요
 
@@ -1218,7 +1217,7 @@ LibriX는 WebSphere ND와 유사한 접근 방식을 사용하지만 더 간소�
 
 다섯 번째이자 마지막 단계에서는 애플리케이션의 컨텍스트 루트를 설정하고 배포를 완료합니다.
 
-![컨텍스트 루트 설정 화면](images/app_install_step5.png)
+![컨텍스트 루트 설정 화면](images/app_install/app_install_step5.png)
 
 #### 컨텍스트 루트 설정 개요
 
