@@ -1,307 +1,575 @@
-# LibriX 사용자 가이드
+# LibriX 관리 문서
 
-LibriX (Open Liberty 기반 관리 콘솔) 사용자 가이드 문서입니다.
+LibriX 관리콘솔의 전체 기능에 대한 상세 문서입니다.
 
-## 📚 문서 구조
+## 문서 구조
 
 ```
-librix-docs/
-├── README.md                              # 이 파일
-└── docs/
-    ├── server/                            # 서버 관리 문서
-    │   ├── application-server.md          # 애플리케이션 서버 관리
-    │   ├── web-server.md                  # 웹 서버 관리
-    │   ├── session-server.md              # 세션 서버 관리
-    │   ├── domain-server.md               # 도메인 서버 관리
-    │   ├── cluster.md                     # 클러스터 관리
-    │   └── images/                        # 서버 관련 이미지
-    ├── application/                       # 애플리케이션 관리 문서
-    │   ├── app-install.md                 # 애플리케이션 설치
-    │   ├── enterprise-app.md              # 엔터프라이즈 애플리케이션 관리
-    │   └── images/                        # 애플리케이션 관련 이미지
-    └── resource/                          # 리소스 관리 문서
-        ├── jdbc-provider.md               # JDBC 제공자 관리
-        ├── datasource.md                  # 데이터소스 관리
-        └── images/                        # 리소스 관련 이미지
-            ├── jdbc_provider/             # JDBC 제공자 이미지 (14개)
-            └── datasource/                # 데이터소스 이미지 (6개)
+docs/
+├── server/                         # 서버 관리 문서
+│   ├── application-server.md       # 애플리케이션 서버 관리
+│   ├── web-server.md               # 웹서버 관리
+│   ├── session-server.md           # 세션 서버 관리
+│   ├── cluster.md                  # 클러스터 관리
+│   └── images/
+│       ├── app_server/             # 애플리케이션 서버 이미지 (12개)
+│       ├── web_server/             # 웹서버 이미지 (8개)
+│       ├── session_server/         # 세션 서버 이미지 (3개)
+│       └── cluster/                # 클러스터 이미지 (5개)
+├── application/                    # 애플리케이션 관리 문서
+│   ├── application-install.md      # 애플리케이션 설치
+│   ├── enterprise-application.md   # 엔터프라이즈 애플리케이션 관리
+│   └── images/
+│       ├── app_install/            # 애플리케이션 설치 이미지 (5개)
+│       └── enterprise_app/         # 엔터프라이즈 애플리케이션 이미지 (6개)
+├── resource/                       # 리소스 관리 문서 ⭐ 신규
+│   ├── jdbc-provider.md            # JDBC 제공자 관리
+│   ├── datasource.md               # 데이터소스 관리
+│   └── images/
+│       ├── jdbc_provider/          # JDBC 제공자 이미지 (14개)
+│       └── datasource/             # 데이터소스 이미지 (6개)
+└── environment/                    # 환경 관리 문서
+    ├── session-domain.md           # 세션 도메인 관리
+    └── images/
+        └── session_domain/         # 세션 도메인 이미지 (3개)
 ```
 
-## 📖 문서 목록
+## 문서 목록
 
-### 서버 관리 (docs/server/)
+### 서버 관리
 
-#### 1. 애플리케이션 서버 관리
-**파일:** `docs/server/application-server.md`
+#### [애플리케이션 서버 관리](docs/server/application-server.md)
 
-Liberty 기반 애플리케이션 서버의 생성, 시작, 중지, 구성 관리를 설명합니다.
+Open Liberty 애플리케이션 서버를 LibriX에서 관리하는 방법을 설명합니다.
 
-**주요 내용:**
-- 서버 개요
-- 서버 생성 및 구성
-- 서버 시작/중지
-- 서버 모니터링
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
 
-#### 2. 웹 서버 관리
-**파일:** `docs/server/web-server.md`
+- 애플리케이션 서버 목록 및 상태 모니터링
+- 서버 생성 및 구성 (2단계 프로세스)
+- 서버 생명주기 관리 (시작, 중지, 재시작)
+- 웹 컨테이너 및 HTTP 설정
+- EJB 컨테이너 및 캐시 설정
+- 세션 관리 구성
+- 트랜잭션 서비스 설정
+- ORB 서비스 구성
+- 설치된 애플리케이션 관리
+- 프로세스 정의 및 JVM 설정
+- 포트 설정 관리
+- 진단 추적 서비스
+- 로그 확인 및 분석
 
-IHS (IBM HTTP Server) 웹 서버 관리를 설명합니다.
+**스크린샷:** 12개
 
-**주요 내용:**
-- 웹 서버 개요
-- 웹 서버 생성
-- 가상 호스트 설정
-- 플러그인 구성
+</details>
 
-#### 3. 세션 서버 관리
-**파일:** `docs/server/session-server.md`
+#### [웹서버 관리](docs/server/web-server.md)
 
-세션 복제를 위한 세션 서버 관리를 설명합니다.
+IBM HTTP Server 또는 Apache HTTP Server를 LibriX에서 관리하는 방법을 설명합니다.
 
-**주요 내용:**
-- 세션 서버 개요
-- 세션 서버 생성
-- 세션 복제 구성
-- 세션 모니터링
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
 
-#### 4. 도메인 서버 관리
-**파일:** `docs/server/domain-server.md`
+- 웹서버 목록 및 상태 모니터링
+- 웹서버 생성 및 구성 (3단계 프로세스)
+- 플러그인 생성 및 관리
+- 플러그인 전파 (Propagation)
+- 웹서버 상세 정보 및 구성
+- 웹서버 구성 파일 관리 (httpd.conf)
+- 로그 확인 (액세스, 오류, 플러그인 로그)
+- 웹서버와 애플리케이션 서버 연동
+- 로드 밸런싱 및 세션 어피니티
 
-중앙 집중식 관리를 위한 도메인 서버를 설명합니다.
+**스크린샷:** 8개
 
-**주요 내용:**
-- 도메인 서버 개요
-- 도메인 서버 구성
-- 서버 관리
-- 구성 동기화
+</details>
 
-#### 5. 클러스터 관리
-**파일:** `docs/server/cluster.md`
+#### [세션 서버 관리](docs/server/session-server.md)
 
-고가용성을 위한 클러스터 구성 및 관리를 설명합니다.
+JCache 기반 세션 서버를 LibriX에서 관리하는 방법을 설명합니다.
 
-**주요 내용:**
-- 클러스터 개요
-- 클러스터 생성
-- 멤버 관리
-- 로드 밸런싱
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
 
-### 애플리케이션 관리 (docs/application/)
+- LibriX와 Open Liberty/WebSphere Liberty의 관계
+- Liberty XML 편집의 복잡성 vs LibriX UI 접근
+- 세션 서버 목록 및 상태 모니터링
+- 세션 서버 생성 및 구성 (2단계 프로세스)
+- JCache 기반 구현 (Hazelcast, Redis)
+- Client-Server 모드 세션 복제
+- 세션 어피니티 메커니즘
+- 세션 서버와 애플리케이션 서버 연동
+- 세션 서버 모니터링
+- 고가용성 구성
+- 성능 최적화
+- 문제 해결
 
-#### 6. 애플리케이션 설치
-**파일:** `docs/application/app-install.md`
+**스크린샷:** 3개
 
-WAR/EAR 애플리케이션의 설치 방법을 설명합니다.
+</details>
 
-**주요 내용:**
-- 애플리케이션 개요
-- 설치 마법사 (6단계)
-- 배포 옵션
-- 애플리케이션 관리
+#### [클러스터 관리](docs/server/cluster.md)
 
-#### 7. 엔터프라이즈 애플리케이션 관리
-**파일:** `docs/application/enterprise-app.md`
+여러 애플리케이션 서버를 하나의 논리적 그룹으로 관리하는 클러스터 기능을 설명합니다.
 
-설치된 엔터프라이즈 애플리케이션의 상세 관리를 설명합니다.
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
 
-**주요 내용:**
-- 애플리케이션 상세 화면
-- 모듈 매핑
-- 컨텍스트 루트 설정
-- 시작/중지/업데이트/삭제
+- LibriX와 WebSphere ND NodeAgent 아키텍처
+- Liberty Collective vs NodeAgent 방식 비교
+- 클러스터 목록 및 상태 모니터링
+- 클러스터 관리 탭 (생성, 삭제, 시작, 중지, 즉시 중지)
+- 클러스터 생성 (3단계 프로세스)
+  - 1단계: 클러스터 정보 입력
+  - 2단계: 클러스터 멤버 작성
+  - 3단계: 새 클러스터 확인
+- 클러스터와 애플리케이션 서버
+- 클러스터 설계 고려사항
+- 클러스터 모니터링
+- 문제 해결
+- 운영 모범 사례
 
-### 리소스 관리 (docs/resource/)
+**스크린샷:** 5개
 
-#### 8. JDBC 제공자 관리 ⭐
-**파일:** `docs/resource/jdbc-provider.md` **(NEW)**
+</details>
+
+### 애플리케이션 관리
+
+#### [애플리케이션 설치](docs/application/application-install.md)
+
+WAR/EAR 애플리케이션을 Liberty 서버에 배포하는 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **1단계: 애플리케이션 업로드**
+  - EAR/WAR 파일 선택 및 업로드
+  - 파일 형식 검증
+
+- **2단계: 설치 옵션 선택**
+  - JSP 사전 컴파일
+  - 설치 디렉토리 지정
+  - 관리노드에 의한 애플리케이션 분배 설정
+  - 애플리케이션 이름 설정
+  - 클래스 리로딩 활성화 및 간격
+  - JSP 리로딩 활성화 및 간격
+  - 클래스 로딩 순서 (parentFirst/parentLast)
+
+- **3단계: 배포할 서버 선택**
+  - 클러스터 선택
+  - 개별 서버 선택
+  - 웹서버 연동
+
+- **4단계: 가상호스트 설정**
+  - 가상 호스트 개념 및 구성
+  - default_host 가상 호스트
+  - 가상 호스트 매핑
+  - 가상 호스트 별칭 (Host Alias)
+  - 다중 애플리케이션 격리
+  - 보안 강화 (관리 트래픽 분리)
+  - 다중 도메인 지원
+
+- **5단계: 컨텍스트 루트 설정**
+  - 컨텍스트 루트 개념 및 역할
+  - 컨텍스트 루트 결정 규칙 (우선순위)
+  - 기본 컨텍스트 루트
+  - 컨텍스트 루트 명명 규칙
+  - 루트 컨텍스트 (/)
+  - 컨텍스트 루트 충돌 해결
+
+- **배포 프로세스**
+  - 파일 전송 및 배포
+  - server.xml 구성 업데이트
+  - 애플리케이션 시작
+  - 웹서버 플러그인 업데이트
+
+- **배포 전략**
+  - 단계적 배포 (Phased Rollout)
+  - Blue-Green 배포
+  - Canary 배포
+
+- **변경사항 확인 및 저장**
+  - 저장 옵션
+  - 변경사항 검토
+  - 롤백 옵션
+
+- **WebSphere ND와의 비교**
+
+**스크린샷:** 5개
+
+</details>
+
+#### [엔터프라이즈 애플리케이션 관리](docs/application/enterprise-application.md)
+
+배포된 애플리케이션의 전체 생명주기를 관리하는 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **애플리케이션 목록 및 상태 모니터링**
+  - 애플리케이션 목록 조회
+  - 상태 표시 (실행 중, 중지됨, 시작 중, 경고)
+  - 선택 및 다중 선택
+
+- **애플리케이션 상세 설정**
+  - 일반 특성
+    - 애플리케이션 디렉토리
+    - 관리노드에 의한 애플리케이션 분배 설정
+    - 애플리케이션 이름
+    - 클래스 리로딩 (간격 설정)
+    - JSP 리로딩 (간격 설정)
+    - 클래스 로딩 순서 (parentFirst vs parentLast 상세 비교)
+  - 추가 특성
+    - 컨텍스트 루트 설정 (URL 경로 매핑)
+    - 가상호스트 설정 (네트워크 격리 및 도메인 매핑)
+    - 공유 라이브러리 설정 (공통/전용 라이브러리 관리)
+    - 모듈 맵핑 설정 (배포 대상 관리)
+
+- **시작 (Start)**
+  - 중지된 애플리케이션 활성화
+  - 7단계 시작 프로세스
+  - Liberty 시작 단계 상세
+  - 문제 해결 (메모리, 포트, 종속성, Liberty 기능)
+  - 클러스터 환경에서의 시작
+  - 시작 후 확인 사항
+
+- **중지 (Stop)**
+  - 실행 중인 애플리케이션 비활성화
+  - Graceful Shutdown (우아한 종료)
+  - 진행 중인 요청 완료 후 정지 (30초 타임아웃)
+  - 리소스 정리 및 메모리 해제
+  - 문제 해결 (타임아웃, 리소스 누수, 세션 손실)
+  - 클러스터 환경 및 롤링 중지
+
+- **설치 (Install)**
+  - 새로운 애플리케이션 배포
+  - 설치 마법사 7단계
+  - 6단계 설치 프로세스
+  - 웹서버 플러그인 자동 업데이트
+  - 애플리케이션 설치 문서 참조
+
+- **설치제거 (Uninstall)**
+  - 애플리케이션 완전 제거
+  - EAR/WAR 파일 및 메타데이터 삭제
+  - 캐시 및 임시 파일 정리
+  - 9단계 제거 프로세스
+  - 설치제거 vs 중지 비교
+  - 백업 및 롤백 불가 주의사항
+  - 클러스터 환경에서의 설치제거
+
+- **업데이트 (Update)**
+  - 기존 애플리케이션을 새 버전으로 교체
+  - 구성 설정 자동 유지
+  - 자동 백업 생성 옵션
+  - 9단계 업데이트 프로세스
+  - 업데이트되는 항목 vs 유지되는 항목
+  - **업데이트 전략**
+    - 일반 업데이트 (단일 서버)
+    - Blue-Green 배포 (무중단)
+    - 롤링 업데이트 (무중단)
+    - 핫픽스 배포 (긴급)
+  - 롤백 방법 (자동/수동)
+  - 호환성, 테스트, 백업, 모니터링
+
+- **내보내기 (Export)**
+  - 설치된 애플리케이션을 EAR 파일로 다운로드
+  - 현재 상태 + 설정 정보 포함
+  - 원본과 다른 구성 파일 추가 (ibm-application-bnd, ibm-web-bnd, ibm-web-ext)
+  - **사용 시나리오**
+    - 프로덕션 백업
+    - 개발→테스트→프로덕션 이관
+    - 재해 복구
+    - 다중 환경 배포
+    - 버전 관리
+  - 내보낸 파일 사용 방법
+  - 주의사항 (민감 정보, 환경별 차이, 버전 호환성)
+
+- **WebSphere ND와의 비교**
+
+**스크린샷:** 6개
+
+</details>
+
+### 리소스 관리
+
+#### [JDBC 제공자 관리](docs/resource/jdbc-provider.md) ⭐
 
 JDBC 드라이버를 관리하는 JDBC 제공자의 생성, 수정, 삭제 방법을 설명합니다.
 
-**주요 내용:**
-- JDBC 제공자 개요 및 역할
-- JDBC 제공자 목록 및 범위 선택
-- JDBC 제공자 생성 마법사 (3단계)
-  - 1단계: 기본 정보 입력 (DB 유형, 제공자 유형, 구현 유형)
-  - 2단계: 클래스 경로 설정
-  - 3단계: 확인
-- 데이터베이스별 설정 가이드
-  - Derby, DB2, Oracle, MySQL, PostgreSQL, SQL Server, Informix, Sybase
-- Liberty server.xml 구성 예시
-- 문제 해결 가이드
-- 모범 사례
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
 
-**이미지:** 14개
+- **JDBC 제공자 개요**
+  - JDBC 제공자의 역할
+  - Liberty 구현 방식
+  - JDBC 제공자와 데이터소스의 관계
 
-#### 9. 데이터소스 관리 ⭐
-**파일:** `docs/resource/datasource.md` **(NEW)**
+- **JDBC 제공자 메인 화면**
+  - 범위 선택 드롭다운 (클러스터/호스트/서버)
+  - 관리 탭 (생성, 삭제)
+  - 목록 테이블 및 필터링
+
+- **JDBC 제공자 생성 (3단계 마법사)**
+  - **1단계: 새 JDBC 제공자 작성**
+    - 범위 설정
+    - 데이터베이스 유형 선택 (8개 DB)
+    - 제공자 유형 선택 (DB별 상세)
+    - 구현 유형 선택 (연결 풀/XA/Simple)
+    - 이름 및 설명
+  - **2단계: 클래스 경로 정보 입력**
+    - 클래스 경로 설정
+    - Liberty 변수 사용
+    - 네이티브 라이브러리 경로
+  - **3단계: 확인**
+    - 입력 정보 검토
+    - 완료 및 저장
+
+- **데이터베이스별 JDBC 드라이버 설정 가이드**
+  - Derby (Embedded/Network)
+  - DB2 (JCC/CLI)
+  - Oracle (Thin/OCI)
+  - MySQL/MariaDB
+  - PostgreSQL
+  - SQL Server (Microsoft/jTDS)
+  - Informix
+  - Sybase
+
+- **JDBC 제공자 상세 화면**
+  - 구성 탭
+  - 연결 풀 탭
+  - 사용자 정의 속성
+
+- **Liberty server.xml 구성**
+  - 데이터베이스별 구성 예시
+  - 고급 설정
+
+- **문제 해결**
+  - ClassNotFoundException
+  - 드라이버 버전 충돌
+  - 네이티브 라이브러리 오류
+  - 격리 수준 문제
+
+- **모범 사례**
+  - 드라이버 파일 관리
+  - 명명 규칙
+  - 범위 선택 전략
+  - 버전 관리
+  - 보안 및 성능
+
+- **WebSphere ND와의 비교**
+
+**스크린샷:** 14개
+
+</details>
+
+#### [데이터소스 관리](docs/resource/datasource.md) ⭐
 
 애플리케이션이 데이터베이스에 연결하기 위한 데이터소스의 생성 및 관리 방법을 설명합니다.
 
-**주요 내용:**
-- 데이터소스 개요 및 역할
-- 데이터소스 목록 및 범위 선택
-- 데이터소스 생성 마법사 (5단계)
-  - 1단계: 기본 정보 입력 (이름, JNDI, JDBC 버전)
-  - 2단계: JDBC 제공자 선택
-  - 3단계: 데이터베이스 연결 정보
-  - 4단계: J2C 인증 별칭 설정
-  - 5단계: 확인
-- 데이터베이스별 속성 설정
-- Liberty server.xml 구성 예시
-- 생성 후 확인 및 테스트
-- 문제 해결 가이드
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
 
-**이미지:** 6개
+- **데이터소스 개요**
+  - 데이터소스의 역할
+  - JDBC 제공자와의 관계
+  - 연결 풀링
 
-## 🚀 시작하기
+- **데이터소스 메인 화면**
+  - 범위 선택
+  - 관리 탭 (생성, 삭제, 연결테스트)
+  - 목록 테이블 (이름, JNDI, 범위, 제공자, 버전)
 
-### 권장 읽기 순서
+- **데이터소스 생성 (5단계 마법사)**
+  - **1단계: 기본 데이터 소스 정보 입력**
+    - 범위 설정
+    - 데이터 소스 이름
+    - JNDI 이름 (애플리케이션 조회용)
+    - JDBC 버전 (jdbc-4.0/4.2/4.3)
+    - 복제 대상 데이터 소스 (선택사항)
+    - 설명
+  - **2단계: JDBC 제공자 선택**
+    - 기존 JDBC 제공자 선택
+    - 새 JDBC 제공자 작성 (선택사항)
+  - **3단계: 기본 속성 정의**
+    - 데이터베이스별 연결 정보
+    - Derby: 데이터베이스 경로, 자동 생성
+    - MySQL: 서버, 포트, DB명, 문자 인코딩, SSL
+    - Oracle: 서버, 포트, SID/Service Name
+    - PostgreSQL: 서버, 포트, DB명, 스키마, SSL
+    - SQL Server: 서버, 포트, DB명, 암호화
+    - DB2: 서버, 포트, DB명, 드라이버 유형
+  - **4단계: 보안 별칭 설정**
+    - J2C 인증 별칭 선택
+    - 새 J2C 인증 별칭 작성
+    - 데이터베이스 사용자 권한
+    - 보안 모범 사례
+  - **5단계: 새 데이터 소스 확인**
+    - 입력 정보 검토
+    - 완료 및 저장
 
-**초보자:**
-1. 애플리케이션 서버 관리 → 서버 개념 이해
-2. 애플리케이션 설치 → 애플리케이션 배포
-3. JDBC 제공자 관리 → 데이터베이스 드라이버 설정
-4. 데이터소스 관리 → 데이터베이스 연결
+- **생성 후 프로세스**
+  - 구성 검증
+  - Liberty server.xml 업데이트
+  - 서버 자동 갱신
+  - 연결 풀 초기화
 
-**고급 사용자:**
-1. 클러스터 관리 → 고가용성 구성
-2. 도메인 서버 관리 → 중앙 집중식 관리
-3. 세션 서버 관리 → 세션 복제
-4. 웹 서버 관리 → 웹 계층 구성
+- **생성 후 확인 및 테스트**
+  - 목록 확인
+  - Liberty 로그 확인
+  - 연결 테스트
+  - 애플리케이션 사용
 
-### 빠른 시작: 데이터베이스 연결 설정
+- **문제 해결**
+  - 이름 중복
+  - 연결 실패
+  - 인증 오류
+  - 네트워크 문제
 
-**1단계: JDBC 제공자 생성**
-```
-자원 > JDBC 제공자 > 생성
-→ 데이터베이스 유형 선택 (예: MySQL)
-→ 드라이버 클래스 경로 입력
-→ 완료
-```
+**스크린샷:** 6개
 
-**2단계: 데이터소스 생성**
-```
-자원 > 데이터 소스 > 생성
-→ 이름 및 JNDI 이름 입력
-→ JDBC 제공자 선택
-→ 데이터베이스 연결 정보 입력
-→ 인증 정보 설정
-→ 완료
-```
+</details>
 
-**3단계: 연결 테스트**
-```
-데이터 소스 목록 > 데이터소스 선택 > 연결테스트
-```
+### 환경 관리
 
-**4단계: 애플리케이션에서 사용**
-```java
-@Resource(name = "jdbc/myapp")
-private DataSource dataSource;
-```
+#### [세션 도메인 관리](docs/environment/session-domain.md)
 
-## 🔧 지원 환경
+세션 데이터를 공유하는 서버 그룹(세션 도메인)을 LibriX에서 관리하는 방법을 설명합니다.
 
-### Liberty 버전
-- Open Liberty 23.0.0.3 이상
-- WebSphere Liberty 23.0.0.3 이상
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
 
-### 지원 데이터베이스
-- **Derby** - Apache Derby (Embedded/Network)
-- **DB2** - IBM DB2 for LUW, z/OS, i
-- **Oracle** - Oracle Database 11g, 12c, 18c, 19c, 21c
-- **MySQL** - MySQL 5.7, 8.0, MariaDB
+- LibriX와 Open Liberty/WebSphere Liberty의 관계
+- Liberty 구성 방식 vs LibriX 접근
+- 세션 도메인 개요 및 역할
+- 세션 도메인 목록 및 관리
+- 세션 도메인 생성
+- JCache 클러스터 구성
+- Hazelcast 구성 상세
+- Redis (Redisson) 구성 상세
+- 세션 도메인 설계 고려사항
+- 세션 도메인 명명 규칙
+- 세션 도메인과 JCache 클러스터
+- 모니터링 및 문제 해결
+- 세션 도메인 마이그레이션
+- 모범 사례
+
+**스크린샷:** 3개
+
+</details>
+
+## LibriX의 가치 제안
+
+### Open Liberty/WebSphere Liberty와의 관계
+
+LibriX는 Open Liberty 및 WebSphere Liberty를 기반으로 하며, Liberty의 강력한 기능을 웹 UI로 제공합니다.
+
+**Liberty의 전통적인 방식:**
+- `server.xml` 파일을 수동으로 편집
+- 복잡한 XML 구조와 구문 이해 필요
+- JCache 구현체 구성 파일 별도 작성 (hazelcast.xml, redisson-config.yaml 등)
+- 각 서버마다 개별적으로 설정 파일 관리
+- 설정 오류 발견이 어렵고 디버깅 시간 소요
+
+**LibriX의 접근 방식:**
+- **GUI 기반 구성**: 복잡한 XML 편집 불필요
+- **자동 구성 생성**: 입력된 정보를 바탕으로 자동으로 server.xml 및 관련 설정 파일 생성
+- **중앙 관리**: 여러 서버의 설정을 한 곳에서 관리
+- **시각적 모니터링**: 서버 상태를 실시간으로 확인
+- **검증 기능**: 설정 오류를 사전에 방지하는 유효성 검사
+- **일관성 보장**: 동일한 구성을 여러 서버에 일관되게 적용
+
+### 지원 기능
+
+**서버 관리**
+- Open Liberty 애플리케이션 서버 관리
+- IBM HTTP Server / Apache HTTP Server 관리
+- JCache 기반 세션 서버 관리
+
+**애플리케이션 관리**
+- WAR/EAR 애플리케이션 배포 (5단계 마법사)
+- 애플리케이션 생명주기 관리 (시작, 중지, 업데이트, 설치제거)
+- 가상호스트 및 컨텍스트 루트 구성
+- 공유 라이브러리 관리
+- 애플리케이션 백업 및 내보내기
+- 무중단 배포 전략 (Blue-Green, 롤링 업데이트, Canary)
+
+**리소스 관리**
+- JDBC 제공자 관리 (8개 주요 데이터베이스 지원)
+- 데이터소스 관리 (연결 풀 구성)
+- J2C 인증 별칭 관리
+- 데이터베이스 연결 테스트
+
+**세션 관리**
+- JCache 구현체: Hazelcast, Redis (Redisson)
+- 클러스터 모드: Client-Server 모드
+- 분산 세션 관리 및 복제
+- 세션 어피니티
+
+**고가용성**
+- 서버 클러스터링
+- 로드 밸런싱
+- 장애 조치 (Failover)
+- 세션 데이터 보존
+
+## 지원 데이터베이스
+
+LibriX는 다음 데이터베이스를 공식 지원합니다:
+
+- **Apache Derby** - Embedded 및 Network 모드
+- **IBM DB2** - LUW, z/OS, i (JCC 및 CLI 드라이버)
+- **Oracle Database** - 11g, 12c, 18c, 19c, 21c (Thin 및 OCI 드라이버)
+- **MySQL** - MySQL 5.7, 8.0 및 MariaDB
 - **PostgreSQL** - PostgreSQL 9.x ~ 15.x
-- **SQL Server** - Microsoft SQL Server 2012 이상
-- **Informix** - IBM Informix 11.x, 12.x, 14.x
-- **Sybase** - SAP Sybase ASE
+- **Microsoft SQL Server** - SQL Server 2012 이상
+- **IBM Informix** - Informix 11.x, 12.x, 14.x
+- **SAP Sybase** - Sybase ASE
 
-### 지원 Java 버전
-- Java 8 (JDBC 4.2)
-- Java 11 (JDBC 4.2, 4.3)
-- Java 17 (JDBC 4.3)
+각 데이터베이스에 대한 상세한 설정 가이드가 문서에 포함되어 있습니다.
 
-## 📖 주요 개념
+## 향후 추가 예정 문서
 
-### 서버 유형
-- **애플리케이션 서버**: 비즈니스 로직 실행
-- **웹 서버**: HTTP 요청 처리 및 정적 컨텐츠 서빙
-- **세션 서버**: 세션 데이터 복제 및 관리
-- **도메인 서버**: 중앙 집중식 관리
+다음 문서들이 추가될 예정입니다:
 
-### 리소스 관리
-- **JDBC 제공자**: JDBC 드라이버 정의 및 관리
-- **데이터소스**: 데이터베이스 연결 풀 제공
-- **J2C 인증 별칭**: 데이터베이스 인증 정보 관리
+- **연결 풀 최적화**: 성능 튜닝 가이드
+- **보안 관리**: 보안 도메인, 인증, 권한 부여
+- **모니터링**: 성능 모니터링 및 통계
+- **로그 관리**: 통합 로그 수집 및 분석
 
-### 범위 (Scope)
-리소스가 사용 가능한 범위를 정의합니다.
-- **클러스터 범위**: 클러스터의 모든 멤버 서버
-- **호스트 범위**: 호스트의 모든 서버
-- **서버 범위**: 특정 서버만
+## 최근 업데이트
 
-## 🔗 관련 링크
+### 2026-01-13
+- ✅ **JDBC 제공자 관리** 문서 추가 (3단계 생성 마법사, 8개 DB 지원)
+- ✅ **데이터소스 관리** 문서 추가 (5단계 생성 마법사, 연결 풀 구성)
+- ✅ 20개 스크린샷 추가 (JDBC 제공자 14개, 데이터소스 6개)
 
-### Liberty 공식 문서
-- [Open Liberty Documentation](https://openliberty.io/docs/)
-- [Liberty Configuration](https://openliberty.io/docs/latest/reference/config/)
-- [Relational Database Connections](https://openliberty.io/docs/latest/relational-database-connections.html)
+### 2026-01-09
+- ✅ **애플리케이션 설치** 문서 추가 (5단계 설치 마법사)
+- ✅ **엔터프라이즈 애플리케이션 관리** 문서 추가 (시작, 중지, 업데이트, 설치제거, 내보내기)
 
-### JDBC 드라이버 다운로드
-- [Apache Derby](https://db.apache.org/derby/)
-- [IBM DB2 JDBC Drivers](https://www.ibm.com/support/pages/db2-jdbc-driver-versions-and-downloads)
-- [Oracle JDBC Drivers](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html)
-- [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/)
-- [PostgreSQL JDBC Driver](https://jdbc.postgresql.org/)
-- [Microsoft SQL Server JDBC Driver](https://docs.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server)
+## GitHub 업로드 방법
 
-## 📝 버전 히스토리
+```bash
+# 1. 압축 해제
+unzip librix-docs.zip
+# 또는
+tar -xzf librix-docs.tar.gz
 
-### v1.1 (2026-01-13)
-- ✨ **NEW**: JDBC 제공자 관리 문서 추가
-- ✨ **NEW**: 데이터소스 관리 문서 추가
-- 📸 20개 스크린샷 추가 (JDBC 제공자 14개, 데이터소스 6개)
-- 📚 데이터베이스별 상세 가이드 추가 (8개 DB)
+# 2. GitHub 저장소로 이동
+cd your-github-repo
 
-### v1.0 (2026-01-09)
-- 📘 초기 문서 작성
-- 서버 관리 문서 (5개)
-- 애플리케이션 관리 문서 (2개)
+# 3. 파일 복사
+cp -r librix-docs/* .
 
-## 🎯 문서 특징
+# 4. Git에 추가 및 커밋
+git add README.md docs/
+git commit -m "Add/Update LibriX documentation - JDBC Provider and DataSource"
+git push
+```
 
-- **단계별 가이드**: 각 단계마다 스크린샷과 함께 상세한 설명
-- **실전 예시**: 실제 사용 시나리오와 구성 예시
-- **데이터베이스별 가이드**: 주요 데이터베이스의 상세 설정 방법
-- **문제 해결**: 일반적인 오류와 해결 방법
-- **모범 사례**: 프로덕션 환경을 위한 권장 사항
-- **Liberty 구성**: server.xml 구성 예시
-- **한글 문서**: 모든 문서가 한글로 작성됨
+## 기여
 
-## 💡 활용 팁
+문서 개선 제안이나 오류 발견 시 이슈를 등록해 주세요.
 
-### 개발 환경 설정
-1. Derby Embedded를 사용한 빠른 시작
-2. 개발용 데이터소스 구성
-3. 애플리케이션 빠른 배포
+## 라이선스
 
-### 프로덕션 환경 설정
-1. 클러스터 구성으로 고가용성 확보
-2. 세션 복제로 무중단 서비스
-3. 웹 서버 연동으로 성능 최적화
-4. 연결 풀 튜닝으로 데이터베이스 성능 향상
-
-### 문제 해결
-각 문서의 "문제 해결" 섹션 참조:
-- JDBC 드라이버 로드 오류
-- 데이터베이스 연결 실패
-- 애플리케이션 배포 오류
-- 클러스터 통신 문제
-
-## 📧 기여 및 문의
-
-문서 개선 제안이나 오류 발견 시 이슈를 등록해주세요.
-
----
-
-**LibriX로 효율적인 Liberty 관리를! 🚀**
+이 문서는 LibriX 프로젝트의 일부입니다.
