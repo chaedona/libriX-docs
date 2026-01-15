@@ -30,8 +30,14 @@ docs/
 │       └── datasource/             # 데이터소스 이미지 (6개)
 └── environment/                    # 환경 관리 문서
     ├── session-domain.md           # 세션 도메인 관리
+    ├── liberty-variables.md        # Liberty 변수 관리 ⭐ 신규
+    ├── virtual-host.md             # 가상호스트 관리 ⭐ 신규
+    ├── shared-library.md           # 공유 라이브러리 관리 ⭐ 신규
     └── images/
-        └── session_domain/         # 세션 도메인 이미지 (3개)
+        ├── session_domain/         # 세션 도메인 이미지 (3개)
+        ├── liberty_variables/      # Liberty 변수 이미지 (4개)
+        ├── virtual_host/           # 가상호스트 이미지 (5개)
+        └── shared_library/         # 공유 라이브러리 이미지 (2개)
 ```
 
 ## 문서 목록
@@ -457,6 +463,210 @@ JDBC 드라이버를 관리하는 JDBC 제공자의 생성, 수정, 삭제 방�
 
 </details>
 
+#### [Liberty 변수 관리](docs/environment/liberty-variables.md) ⭐
+
+Liberty 서버 구성에서 재사용 가능한 값을 정의하고 관리하는 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **Liberty 변수 개요**
+  - 변수의 역할 및 필요성
+  - 구성 파일 재사용성 및 이식성
+  - 환경별 설정 관리
+
+- **Liberty 변수 메인 화면**
+  - 범위 선택 (클러스터/호스트/서버)
+  - 변수 목록 및 필터링
+  - 시스템 변수 vs 사용자 정의 변수
+
+- **Liberty 변수 생성**
+  - 변수 이름 및 명명 규칙
+  - 변수 값 설정
+  - 범위 선택 전략
+
+- **변수 사용**
+  - server.xml에서 변수 참조 (${변수명})
+  - 다른 변수 참조 및 조합
+  - 기본값 설정
+  - Liberty 내장 변수 활용
+
+- **변수 유형**
+  - 시스템 변수 (LibriX 자동 생성)
+  - 사용자 정의 변수
+  - Liberty 내장 변수
+
+- **변수 우선순위**
+  - 서버 범위 > 호스트 범위 > 클러스터 범위
+  - 시스템 속성, 환경 변수, bootstrap.properties
+
+- **Liberty server.xml 구성**
+  - 기본 구문 및 예시
+  - 환경별 구성
+
+- **문제 해결**
+  - 변수 값 미적용
+  - 변수 참조 순환
+  - 특수문자 처리
+
+- **모범 사례**
+  - 명명 규칙 일관성
+  - 범위 선택 전략
+  - 변수 조합 활용
+  - 민감한 정보 보호
+
+- **WebSphere ND와의 비교**
+
+**스크린샷:** 4개
+
+</details>
+
+#### [가상호스트 관리](docs/environment/virtual-host.md) ⭐
+
+하나의 Liberty 서버에서 여러 도메인과 애플리케이션을 분리하여 제공하는 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **가상호스트 개요**
+  - 가상호스트의 역할 및 필요성
+  - default_host (기본 가상호스트)
+  - 다중 도메인/포트 처리
+
+- **가상호스트 메인 화면**
+  - 목록 조회 및 관리
+  - 생성/삭제 탭
+
+- **가상호스트 생성**
+  - 가상호스트 이름 설정
+  - 명명 규칙 (도메인/용도/환경 기반)
+  - 호스트 별명 추가 필수
+
+- **호스트 별명 관리**
+  - 호스트명:포트 형식
+  - 와일드카드 사용 (*, *.company.com)
+  - IP 주소 및 대역 지원
+  - 우선순위 및 매칭 규칙
+
+- **요청 라우팅**
+  - Host 헤더 기반 매칭
+  - 매칭 우선순위
+
+- **MIME 유형 관리**
+  - 파일 확장자와 MIME 타입 매핑
+  - 사용자 정의 MIME 타입
+
+- **가상호스트 사용 사례**
+  - 다중 도메인 호스팅
+  - 포트 기반 분리
+  - 환경별 분리
+  - 보안 분리
+  - API 버전 분리
+
+- **애플리케이션 매핑**
+  - server.xml 구성
+  - LibriX 관리 콘솔 설정
+
+- **Liberty server.xml 구성**
+  - 기본 구문
+  - 다중 도메인 구성
+  - 와일드카드 사용
+
+- **문제 해결**
+  - 404 Not Found
+  - 가상호스트 충돌
+  - DNS/hosts 파일 문제
+
+- **모범 사례**
+  - 명명 규칙
+  - 최소 권한 원칙
+  - HTTPS 우선
+  - 환경별 분리
+
+- **WebSphere ND와의 비교**
+
+**스크린샷:** 5개
+
+</details>
+
+#### [공유 라이브러리 관리](docs/environment/shared-library.md) ⭐
+
+여러 애플리케이션이 공통으로 사용하는 JAR 파일을 중앙에서 관리하는 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **공유 라이브러리 개요**
+  - 공유 라이브러리의 역할 및 필요성
+  - 공유 라이브러리 vs 애플리케이션 내장
+  - 클래스로더 계층
+
+- **공유 라이브러리 메인 화면**
+  - 목록 조회 및 관리
+  - 생성/삭제 탭
+
+- **공유 라이브러리 생성**
+  - 라이브러리 이름 설정
+  - 명명 규칙 (DB/프레임워크/용도 기반)
+  - **디렉토리 경로 설정**
+    - JAR 파일이 있는 디렉토리 지정
+    - Liberty 변수 활용
+    - 패턴 매칭 (includes/excludes)
+  - **파일 경로 설정**
+    - 특정 JAR 파일 직접 지정
+    - 정확한 버전 제어
+  - **바이너리 파일 경로 설정**
+    - 네이티브 라이브러리 (.so, .dll, .dylib)
+    - Oracle, DB2 등 네이티브 드라이버
+  - **단일 클래스 로더 옵션**
+    - 단일 vs 개별 클래스로더
+    - 라이브러리 간 의존성 해결
+    - 메모리 효율성
+
+- **경로 설정 전략**
+  - 디렉토리 기반 (권장)
+  - 파일 기반
+  - 혼합 방식
+
+- **공유 라이브러리 사용 사례**
+  - 데이터베이스 드라이버
+  - Apache Commons 라이브러리
+  - 사내 공통 모듈
+  - 로깅 프레임워크
+  - REST API 라이브러리
+
+- **애플리케이션 매핑**
+  - 개별 애플리케이션
+  - 여러 라이브러리
+  - 모든 애플리케이션
+  - 클래스로더 위임 설정 (parentFirst/parentLast)
+
+- **Liberty server.xml 구성**
+  - 기본 구문 (library, fileset, file)
+  - 여러 디렉토리 포함
+  - 패턴 매칭
+  - 네이티브 라이브러리 포함
+
+- **문제 해결**
+  - ClassNotFoundException
+  - NoClassDefFoundError
+  - 버전 충돌
+  - 네이티브 라이브러리 로드 실패
+
+- **모범 사례**
+  - 디렉토리 구조 표준화
+  - 명명 규칙 일관성
+  - 버전 관리
+  - 의존성 문서화
+  - 단일 클래스로더 사용
+  - Liberty 변수 활용
+
+- **WebSphere ND와의 비교**
+
+**스크린샷:** 2개
+
+</details>
+
 ## LibriX의 가치 제안
 
 ### Open Liberty/WebSphere Liberty와의 관계
@@ -537,6 +747,12 @@ LibriX는 다음 데이터베이스를 공식 지원합니다:
 
 ## 최근 업데이트
 
+### 2026-01-15
+- ✅ **Liberty 변수 관리** 문서 추가 (범위별 변수 관리, 환경별 설정)
+- ✅ **가상호스트 관리** 문서 추가 (다중 도메인, 호스트 별명 구성)
+- ✅ **공유 라이브러리 관리** 문서 추가 (JAR 파일 중앙 관리, 클래스로더 설정)
+- ✅ 11개 스크린샷 추가 (Liberty 변수 4개, 가상호스트 5개, 공유 라이브러리 2개)
+
 ### 2026-01-13
 - ✅ **JDBC 제공자 관리** 문서 추가 (3단계 생성 마법사, 8개 DB 지원)
 - ✅ **데이터소스 관리** 문서 추가 (5단계 생성 마법사, 연결 풀 구성)
@@ -562,7 +778,7 @@ cp -r librix-docs/* .
 
 # 4. Git에 추가 및 커밋
 git add README.md docs/
-git commit -m "Add/Update LibriX documentation - JDBC Provider and DataSource"
+git commit -m "Add Liberty Variables, Virtual Host, and Shared Library documentation"
 git push
 ```
 
