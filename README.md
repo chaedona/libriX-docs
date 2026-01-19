@@ -38,6 +38,14 @@ docs/
         ├── liberty_variables/      # Liberty 변수 이미지 (4개)
         ├── virtual_host/           # 가상호스트 이미지 (5개)
         └── shared_library/         # 공유 라이브러리 이미지 (2개)
+└── system-management/              # 시스템 관리 문서 ⭐ 신규
+    ├── deployment-manager.md       # 배치 관리자 관리
+    ├── node-management.md          # 노드 관리
+    ├── node-agent.md               # 노드 에이전트 관리
+    └── images/
+        ├── deployment_manager/     # 배치 관리자 이미지 (4개)
+        ├── node_management/        # 노드 관리 이미지 (2개)
+        └── node_agent/             # 노드 에이전트 이미지 (1개)
 ```
 
 ## 문서 목록
@@ -667,6 +675,243 @@ Liberty 서버 구성에서 재사용 가능한 값을 정의하고 관리하는
 
 </details>
 
+### 시스템 관리
+
+#### [배치 관리자 관리](docs/system-management/deployment-manager.md) ⭐
+
+LibriX의 중앙 관리 서버인 배치 관리자(Deployment Manager)의 구성 및 관리 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **배치 관리자 개요**
+  - 중앙 관리 서버 역할
+  - WebSphere ND Deployment Manager와의 관계
+  - 노드 및 서버 구성 정보 저장
+  - 클러스터 관리
+
+- **배치 관리자 화면**
+  - 구성 탭 (일반 특성, 서버 인프라)
+  - 런타임 탭 (실행 상태, 리소스 정보)
+
+- **구성 탭**
+  - 이름 (dmgr)
+  - 호스트 이름 (FQDN/IP)
+  - 프로세스 정의
+  - 포트 설정 (8개 포트)
+  - 중지 버튼
+
+- **런타임 탭**
+  - 프로세스 ID
+  - 호스트
+  - 상태 (STARTED/STARTING/STOPPING/STOPPED)
+  - 현재 힙 크기
+  - 최대 힙 크기
+
+- **프로세스 정의**
+  - 클래스 경로
+  - 부트클래스 경로
+  - 상세한 클래스 로딩
+  - 상세한 가비지 콜렉션
+  - 상세한 JNI
+  - 초기 힙 크기
+  - 최대 힙 크기
+  - 일반 JVM 인수
+  - JIT 사용 안함
+  - 운영 체제 이름
+
+- **포트 설정**
+  - JMX_ENDPOINT_ADDRESS (28010)
+  - JMX_ENDPOINT_SECURE_ADDRESS (28011)
+  - WC_DEFAULTHOST (29060)
+  - WC_DEFAULTHOST_SECURE (29043) - 관리 콘솔
+  - SIB_ENDPOINT_ADDRESS (27273)
+  - SIB_ENDPOINT_SECURE_ADDRESS (27274)
+  - ORB_LISTENER_ADDRESS (22808)
+  - ORB_LISTENER_SECURE_ADDRESS (22809)
+
+- **배치 관리자의 역할**
+  - 중앙 구성 저장소
+  - 구성 동기화
+  - 클러스터 관리
+  - 애플리케이션 배포 조율
+  - 보안 및 인증
+
+- **배치 관리자 시작 및 중지**
+  - Liberty 명령어
+  - systemd 서비스
+  - 시작/중지 프로세스
+
+- **아키텍처**
+  - 시스템 구성도
+  - 통신 흐름
+  - WebSphere ND와의 비교
+
+- **문제 해결**
+  - 시작 실패
+  - 노드 에이전트 연결 실패
+  - 구성 동기화 실패
+
+- **모범 사례**
+  - 고가용성 구성
+  - 백업 전략
+  - 모니터링
+  - 보안 강화
+
+**스크린샷:** 4개
+
+</details>
+
+#### [노드 관리](docs/system-management/node-management.md) ⭐
+
+Liberty 서버들의 논리적 그룹인 노드를 배치 관리자에서 관리하는 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **노드 개요**
+  - 노드의 개념 및 역할
+  - WebSphere ND Node와의 관계
+  - 노드 = 호스트 + Node Agent + 서버들
+
+- **노드 관리 화면**
+  - 비관리 노드 추가
+  - 노드 삭제
+  - 동기화 확인
+
+- **노드 목록**
+  - 선택
+  - 호스트 이름
+  - 버전
+  - 동기화 상태 (SYNC/UNSYNC/Unknown)
+
+- **노드의 개념**
+  - 서버 그룹화
+  - 관리 단위
+  - 배포 대상
+  - 장애 격리
+  - 노드와 호스트 관계
+  - 노드와 클러스터 관계
+
+- **비관리 노드 추가**
+  - 노드 등록 개요
+  - 비관리 노드 추가 화면
+  - 호스트명 입력 (필수)
+  - 등록 전 준비사항
+    - Liberty 설치
+    - Node Agent 생성
+    - Node Agent 구성
+    - 네트워크 연결 확인
+    - 방화벽 규칙
+  - 등록 프로세스 (3단계)
+  - 등록 후 확인
+  - 등록 문제 해결
+
+- **노드 삭제**
+  - 삭제 프로세스
+  - 삭제 후 상태
+  - 영향 범위
+
+- **구성 동기화**
+  - 동기화 개념
+  - 마스터 구성 vs 로컬 구성
+  - 자동 동기화
+  - 수동 동기화
+  - 동기화 문제 해결
+
+- **WebSphere ND와의 비교**
+  - 아키텍처 비교
+  - 기능 비교
+  - 마이그레이션 가이드
+
+- **모범 사례**
+  - 노드 명명 규칙
+  - 노드 구성 계획
+  - 동기화 모니터링
+  - 백업 전략
+
+**스크린샷:** 2개
+
+</details>
+
+#### [노드 에이전트 관리](docs/system-management/node-agent.md) ⭐
+
+각 노드에서 실행되는 관리 에이전트인 Node Agent의 구성 및 관리 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **Node Agent 개요**
+  - Node Agent의 역할
+  - WebSphere ND NodeAgent와의 관계
+  - 통신 중계자 역할
+  - 위치 및 아키텍처
+
+- **Node Agent 화면**
+  - 중지
+  - 재시작
+  - 목록 테이블
+
+- **Node Agent 목록**
+  - 선택
+  - 이름 (nodeagent)
+  - 호스트 이름
+  - 버전
+  - 상태 (STARTED/STOPPED/STARTING/UNKNOWN)
+
+- **Node Agent의 역할**
+  - 통신 중계자
+    - REST/HTTPS 기반 통신
+    - 구성 동기화
+    - 상태 보고
+    - 관리 명령 수신
+  - 구성 동기화
+    - 자동/수동 동기화
+    - 동기화 프로세스
+  - 서버 생명주기 관리
+    - 서버 시작/중지/재시작
+    - 서버 상태 확인
+  - 상태 모니터링
+    - Node Agent 자체
+    - Liberty 서버
+    - 시스템 리소스
+  - 로그 수집
+
+- **Node Agent 구성**
+  - 설치 위치
+  - server.xml 구성
+  - bootstrap.properties
+  - jvm.options
+
+- **Node Agent 시작 및 중지**
+  - Liberty 명령어
+  - 시작 프로세스
+  - 시작 확인
+  - 자동 시작 설정 (systemd)
+  - 중지 프로세스
+  - 중지 시 영향
+  - 재시작
+
+- **Node Agent 문제 해결**
+  - 시작 실패
+  - dmgr 연결 실패
+  - 동기화 실패
+  - 메모리 부족
+
+- **WebSphere ND와의 비교**
+  - 아키텍처 비교
+  - 기능 비교
+
+- **모범 사례**
+  - 자동 시작 설정
+  - 모니터링
+  - 로그 관리
+  - 보안
+
+**스크린샷:** 1개
+
+</details>
+
 ## LibriX의 가치 제안
 
 ### Open Liberty/WebSphere Liberty와의 관계
@@ -747,6 +992,12 @@ LibriX는 다음 데이터베이스를 공식 지원합니다:
 
 ## 최근 업데이트
 
+### 2026-01-19
+- ✅ **배치 관리자 관리** 문서 추가 (구성/런타임 탭, 프로세스 정의, 포트 설정)
+- ✅ **노드 관리** 문서 추가 (비관리 노드 추가, 동기화 상태, 노드 개념)
+- ✅ **노드 에이전트 관리** 문서 추가 (통신 중계, 구성 동기화, 생명주기 관리)
+- ✅ 7개 스크린샷 추가 (배치 관리자 4개, 노드 관리 2개, 노드 에이전트 1개)
+
 ### 2026-01-15
 - ✅ **Liberty 변수 관리** 문서 추가 (범위별 변수 관리, 환경별 설정)
 - ✅ **가상호스트 관리** 문서 추가 (다중 도메인, 호스트 별명 구성)
@@ -778,7 +1029,7 @@ cp -r librix-docs/* .
 
 # 4. Git에 추가 및 커밋
 git add README.md docs/
-git commit -m "Add Liberty Variables, Virtual Host, and Shared Library documentation"
+git commit -m "Add System Management documentation (Deployment Manager, Node Management, Node Agent)"
 git push
 ```
 
