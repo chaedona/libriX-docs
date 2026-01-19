@@ -384,7 +384,7 @@ SSL/TLS 보안 연결에 대한 설정을 구성합니다:
 
 "세션 관리" 링크를 클릭하면 HTTP 세션 관리 정책을 구성할 수 있는 화면이 표시됩니다.
 
-![세션 관리 설정 화면](images/session_management.png)
+![세션 관리 설정 화면](images/app_server/session_management.png)
 
 **일반 특성**
 
