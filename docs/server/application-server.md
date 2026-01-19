@@ -555,7 +555,7 @@ EJB 컨테이너의 캐시 관련 속성을 설정할 수 있습니다:
 
 "ORB 서비스" 링크를 클릭하면 Object Request Broker (ORB) 서비스의 설정을 관리할 수 있는 화면이 표시됩니다.
 
-![ORB 서비스 설정 화면](images/orb_service.png)
+![ORB 서비스 설정 화면](images/app_server/orb_service.png)
 
 **일반 특성**
 
