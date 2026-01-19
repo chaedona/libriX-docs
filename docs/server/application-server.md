@@ -946,6 +946,182 @@ com.ibm.ws.session=fine
 - 파일 크기 제한: 10MB
 
 로그 설정을 통해 시스템 로그를 효율적으로 관리하고, 문제 발생 시 필요한 정보를 확보할 수 있습니다.
+#### 기타
+
+- **XML 편집기**: 서버의 server.xml 구성 파일을 직접 편집합니다.
+
+##### XML 편집기
+
+"XML 편집기" 링크를 클릭하면 서버의 server.xml 구성 파일을 직접 편집할 수 있는 화면이 표시됩니다.
+
+![XML 편집기 화면](images/app_server/xml_editor.png)
+
+Open Liberty 서버는 server.xml 파일을 통해 모든 구성을 관리합니다. LibriX는 대부분의 설정을 GUI를 통해 편집할 수 있도록 제공하지만, XML 편집기를 사용하면 server.xml 파일을 직접 편집하여 더욱 세밀한 제어와 고급 설정이 가능합니다.
+
+**XML 편집기 화면 구성**
+
+XML 편집기 화면은 다음과 같은 요소로 구성됩니다:
+
+**범위**
+
+현재 편집 중인 서버의 식별 정보가 표시됩니다 (예: 호스트=localhost.localdomain, 서버=MyTestServer).
+
+**상태**
+
+서버의 현재 상태가 표시됩니다:
+- **LOADED**: 서버 구성이 로드된 상태
+- **RUNNING**: 서버가 실행 중인 상태
+- **STOPPED**: 서버가 중지된 상태
+
+**XML 편집 영역**
+
+server.xml 파일의 전체 내용이 라인 번호와 함께 표시되는 텍스트 편집기입니다. XML 편집기는 다음과 같은 기능을 제공합니다:
+
+- **라인 번호 표시**: 각 라인의 번호가 왼쪽에 표시되어 코드 위치를 쉽게 파악할 수 있습니다
+- **XML 구문 강조**: XML 요소, 속성, 값이 색상으로 구분되어 가독성이 향상됩니다
+  - 요소 이름: 녹색으로 표시 (예: `<featureManager>`, `<httpEndpoint>`)
+  - 속성 이름: 검은색으로 표시 (예: `host`, `httpPort`)
+  - 속성 값: 빨간색으로 표시 (예: `"28016"`, `"29080"`)
+- **들여쓰기**: XML 구조에 따라 자동으로 들여쓰기가 적용되어 계층 구조를 쉽게 파악할 수 있습니다
+- **스크롤**: 긴 XML 파일의 경우 스크롤을 통해 전체 내용을 확인할 수 있습니다
+
+**server.xml 파일의 주요 구조**
+
+XML 편집기에 표시되는 server.xml 파일은 다음과 같은 주요 섹션으로 구성됩니다:
+
+1. **XML 선언**
+   ```xml
+   <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+   ```
+
+2. **server 루트 요소**
+   ```xml
+   <server description="new server">
+   ```
+
+3. **featureManager**: Liberty 서버에서 사용할 기능(Feature)들을 정의합니다
+   ```xml
+   <featureManager>
+       <feature>restConnector-2.0</feature>
+       <feature>localConnector-1.0</feature>
+       <feature>monitor-1.0</feature>
+       <feature>requestTiming-1.0</feature>
+       <feature>jakartaee-8.0</feature>
+   </featureManager>
+   ```
+
+4. **httpEndpoint**: HTTP/HTTPS 엔드포인트 설정
+   ```xml
+   <httpEndpoint host="*" httpPort="28016" httpsPort="28017" id="defaultHttpEndpoint"/>
+   ```
+
+5. **iiopsOptions**: IIOP 통신 설정
+   ```xml
+   <iiopsOptions host="localhost.localdomain" id="defaultIiopEndpoint" iiopPort="22814"/>
+   ```
+
+6. **applicationManager**: 애플리케이션 관리 설정
+   ```xml
+   <applicationManager autoExpand="true"/>
+   ```
+
+7. **logging**: 로깅 설정
+   ```xml
+   <logging consoleLogLevel="off" copySystemStreams="false" logDirectory="${LOG_ROOT}/${SERVER_NAME}" maxFiles="30" messageFileName="messages.log"/>
+   ```
+
+8. **include 요소**: 외부 구성 파일을 포함합니다
+   ```xml
+   <include location="${shared.resource.dir}/environments/virtualhost.xml"/>
+   <include location="${shared.resource.dir}/environments/sharedlibrary.xml"/>
+   <include location="${shared.resource.dir}/security/userRegistry.xml"/>
+   <include location="${server.config.dir}/MyTestServer.xml"/>
+   <include location="${shared.resource.dir}/security/security.xml"/>
+   ```
+
+**XML 편집 작업**
+
+XML 편집기에서 server.xml 파일을 수정할 때 다음 사항에 유의하십시오:
+
+1. **XML 문법 준수**: XML 파일의 기본 문법 규칙을 따라야 합니다
+   - 모든 여는 태그는 닫는 태그가 있어야 합니다
+   - 속성 값은 따옴표로 묶어야 합니다
+   - 태그는 대소문자를 구분합니다
+
+2. **Liberty 구성 요소 이해**: 수정하려는 요소의 의미와 영향을 정확히 이해하고 편집하십시오
+   - Liberty 공식 문서를 참조하여 각 요소와 속성의 의미를 확인하십시오
+   - 잘못된 설정은 서버 시작 실패나 오작동을 유발할 수 있습니다
+
+3. **백업**: 중요한 변경 전에는 현재 설정을 백업하십시오
+
+**XML 편집 버튼**
+
+화면 하단에는 다음과 같은 버튼들이 제공됩니다:
+
+- **새로고침**: 파일의 최신 내용을 다시 로드합니다. 편집 중인 내용은 손실됩니다.
+- **포맷**: XML 파일의 들여쓰기와 형식을 자동으로 정리합니다.
+- **검증**: XML 문법의 유효성을 검사합니다.
+- **저장**: 변경사항을 server.xml 파일에 저장합니다.
+- **이전**: 변경사항을 저장하지 않고 이전 화면으로 돌아갑니다.
+
+**XML 편집 워크플로우**
+
+1. **현재 설정 확인**: XML 편집기를 열면 현재 server.xml 파일의 내용을 확인할 수 있습니다
+
+2. **필요한 부분 수정**: 스크롤을 이용하여 수정이 필요한 섹션을 찾아 직접 편집합니다
+   - 새로운 요소 추가
+   - 기존 속성 값 변경
+   - 불필요한 요소 제거
+
+3. **검증**: "검증" 버튼을 클릭하여 XML 문법 오류가 없는지 확인합니다
+
+4. **포맷 정리** (선택): "포맷" 버튼을 클릭하여 들여쓰기와 형식을 자동으로 정리합니다
+
+5. **저장**: "저장" 버튼을 클릭하여 변경사항을 적용합니다
+
+6. **서버 반영**: 
+   - `서버 설정 실시간 반영` 옵션이 활성화된 경우: 변경사항이 자동으로 서버에 반영됩니다
+   - 실시간 반영이 비활성화된 경우: 서버를 재시작해야 변경사항이 적용됩니다
+
+**주의사항**
+
+- **실시간 반영 옵션 확인**: 서버의 "서버 설정 실시간 반영" 옵션이 활성화되어 있으면 XML 파일 저장 시 자동으로 서버에 반영됩니다
+- **서버 재시작 필요 여부**: 일부 설정은 서버 재시작이 필요할 수 있습니다
+- **변경 영향 범위**: server.xml 파일의 변경은 전체 서버에 영향을 미칠 수 있으므로 신중하게 편집하십시오
+- **백업 필수**: 중요한 변경 전에는 반드시 현재 설정을 백업하십시오
+- **문법 오류 주의**: XML 문법 오류가 있으면 서버가 시작되지 않을 수 있습니다
+
+**XML 편집기 사용 시나리오**
+
+다음과 같은 경우에 XML 편집기를 사용하는 것이 유용합니다:
+
+1. **GUI에서 제공하지 않는 고급 설정**: LibriX GUI에 없는 Liberty 기능을 설정해야 할 때
+2. **대량 설정 변경**: 여러 설정을 한 번에 변경해야 할 때
+3. **복잡한 구성**: 여러 요소가 연관된 복잡한 구성을 설정할 때
+4. **기존 설정 복사**: 다른 서버의 설정을 복사하여 적용할 때
+5. **문제 해결**: 특정 문제를 해결하기 위해 구성 파일을 직접 확인하고 수정해야 할 때
+
+**Liberty 구성 요소 참고 자료**
+
+server.xml 파일에서 사용할 수 있는 주요 구성 요소들:
+
+- **featureManager**: 서버 기능 관리
+- **httpEndpoint**: HTTP/HTTPS 엔드포인트
+- **applicationManager**: 애플리케이션 관리
+- **logging**: 로깅 설정
+- **dataSource**: 데이터소스 정의
+- **jdbcDriver**: JDBC 드라이버 정의
+- **transaction**: 트랜잭션 관리
+- **orb**: ORB 서비스
+- **webContainer**: 웹 컨테이너 설정
+- **sessionManagement**: 세션 관리
+- **ejbContainer**: EJB 컨테이너 설정
+
+자세한 정보는 Open Liberty 공식 문서의 [Server Configuration Overview](https://openliberty.io/docs/latest/reference/config/server-configuration-overview.html)를 참조하십시오.
+
+**WebSphere Application Server ISC와의 비교**
+
+WebSphere Application Server의 ISC(Integrated Solutions Console)에서는 XML 파일을 직접 편집하는 기능이 제한적이었으나, LibriX는 Open Liberty의 XML 기반 구성 방식을 활용하여 유연한 XML 편집 기능을 제공합니다. 이를 통해 관리자는 GUI의 편의성과 XML 편집의 유연성을 모두 활용할 수 있습니다.
 
 ### 런타임 탭
 
