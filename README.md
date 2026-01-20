@@ -923,7 +923,7 @@ Liberty 서버들의 논리적 그룹인 노드를 배치 관리자에서 관리
 </details>
 ### 보안 관리
 
-#### [사용자 관리](security/user-management.md) ⭐
+#### [사용자 관리](docs/security/user-management.md) ⭐
 
 LibriX 관리콘솔의 사용자 계정을 생성하고 관리하는 방법을 설명합니다.
 
@@ -976,7 +976,7 @@ LibriX 관리콘솔의 사용자 계정을 생성하고 관리하는 방법을 �
 
 </details>
 
-#### [J2C 인증 데이터](security/j2c-authentication-data.md) ⭐
+#### [J2C 인증 데이터](docs/security/j2c-authentication-data.md) ⭐
 
 Java 2 Connector 인증 정보를 관리하는 방법을 설명합니다.
 
@@ -1031,7 +1031,7 @@ Java 2 Connector 인증 정보를 관리하는 방법을 설명합니다.
 
 </details>
 
-#### [SSL 구성](security/ssl-configuration.md) ⭐
+#### [SSL 구성](docs/security/ssl-configuration.md) ⭐
 
 Liberty 서버의 SSL/TLS 통신을 설정하고 관리하는 방법을 설명합니다.
 
@@ -1089,7 +1089,7 @@ Liberty 서버의 SSL/TLS 통신을 설정하고 관리하는 방법을 설명�
 
 </details>
 
-#### [인증서 관리](security/certificate-management.md) ⭐
+#### [인증서 관리](docs/security/certificate-management.md) ⭐
 
 Liberty 서버의 SSL/TLS 인증서와 키 저장소를 관리하는 방법을 설명합니다.
 
