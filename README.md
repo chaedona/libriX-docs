@@ -47,23 +47,27 @@ docs/
 │       ├── node_management/        # 노드 관리 이미지 (2개)
 │       └── node_agent/             # 노드 에이전트 이미지 (1개)
 ├── security/                       # 보안 관리 문서
-    ├── user-management.md          # 사용자 관리
-    ├── j2c-authentication-data.md  # J2C 인증 데이터
-    ├── ssl-configuration.md        # SSL 구성
-    ├── certificate-management.md   # 인증서 관리
+│   ├── user-management.md          # 사용자 관리
+│   ├── j2c-authentication-data.md  # J2C 인증 데이터
+│   ├── ssl-configuration.md        # SSL 구성
+│   ├── certificate-management.md   # 인증서 관리
+│   └── images/
+│       ├── user_management/        # 사용자 관리 이미지 (6개)
+│       ├── j2c_auth/               # J2C 인증 데이터 이미지 (6개)
+│       ├── ssl_configuration/      # SSL 구성 이미지 (4개)
+│       └── certificate_management/ # 인증서 관리 이미지 (15개)
+├── monitoring/                     # 모니터링 문서
+│   ├── monitoring.md               # 모니터링 통합 문서
+│   └── images/
+│       ├── server_monitoring/      # 서버 모니터링 이미지 (2개)
+│       ├── connection_pool/        # 연결 풀 모니터링 이미지 (1개)
+│       ├── namespace/              # 네임스페이스 현황 이미지 (2개)
+│       ├── dashboard/              # 모니터링 대시보드 이미지 (1개)
+│       └── dashboard_graphic/      # 그래픽 대시보드 이미지 (5개)
+└── troubleshooting/                # 문제 분석 문서 ⭐ 신규
+    ├── dump-generation.md          # 덤프생성 문서
     └── images/
-        ├── user_management/        # 사용자 관리 이미지 (6개)
-        ├── j2c_auth/               # J2C 인증 데이터 이미지 (6개)
-        ├── ssl_configuration/      # SSL 구성 이미지 (4개)
-        └── certificate_management/ # 인증서 관리 이미지 (15개)
-└── monitoring/                     # 모니터링 문서 ⭐ 신규
-    ├── monitoring.md               # 모니터링 통합 문서
-    └── images/
-        ├── server_monitoring/      # 서버 모니터링 이미지 (2개)
-        ├── connection_pool/        # 연결 풀 모니터링 이미지 (1개)
-        ├── namespace/              # 네임스페이스 현황 이미지 (2개)
-        ├── dashboard/              # 모니터링 대시보드 이미지 (1개)
-        └── dashboard_graphic/      # 그래픽 대시보드 이미지 (5개)
+        └── dump_generation/        # 덤프생성 이미지 (7개)
 ```
 
 ## 문서 목록
@@ -422,9 +426,9 @@ Liberty 서버의 SSL/TLS 인증서와 키 저장소를 관리하는 방법을 �
 
 </details>
 
-### 모니터링 및 문제 분석
+### 모니터링
 
-#### [모니터링](docs/monitoring/monitoring.md) ⭐ 신규
+#### [모니터링](docs/monitoring/monitoring.md)
 
 Liberty 서버와 리소스의 실시간 성능을 모니터링하는 방법을 설명합니다.
 
@@ -438,12 +442,12 @@ Liberty 서버와 리소스의 실시간 성능을 모니터링하는 방법을 
 
 - **서버 모니터링**
   - 모니터링 시작/중지
-  - 모니터링 상태 관리 (started/stopped/disable/LOADING)
+  - 모니터링 상태 관리
   - Liberty server.xml 구성
 
 - **연결 풀 모니터링**
   - 데이터소스 연결 풀 추적
-  - 연결 풀 메트릭 (생성건수, 사용중, 여유, 대기시간 등)
+  - 연결 풀 메트릭
   - 연결 부족/누수 감지
 
 - **네임스페이스 현황**
@@ -452,35 +456,78 @@ Liberty 서버와 리소스의 실시간 성능을 모니터링하는 방법을 
   - 리소스 등록 확인
 
 - **모니터링 대시보드**
-  - Instance 성능 테이블 (CPU, 메모리, 스레드, GC)
-  - DB 성능 테이블 (연결 풀 상태)
+  - Instance/DB 성능 테이블
   - 자동 새로고침 기능
 
 - **모니터링 대시보드 (그래픽)**
-  - 4개 시계열 그래프:
-    1. 프로세스별 CPU 사용량 (%)
-    2. 액티브 쓰레드
-    3. Heap 사용량 (MB)
-    4. 액티브 DB 연결풀
+  - 4개 시계열 그래프
   - 실시간 추세 분석
-  - 자동 새로고침 및 추세 제어
-
-- **모니터링 모범 사례**
-  - 주기적 점검 (일일/주간/월간)
-  - 임계값 설정 (CPU, 메모리, 스레드, DB 연결)
-  - 성능 최적화 (JVM 튜닝, 스레드 풀, 연결 풀)
-
-- **문제 해결**
-  - CPU 사용률 지속 상승
-  - 메모리 누수 탐지
-  - 스레드 풀 고갈
-  - DB 연결 풀 고갈
-
-- **WebSphere ND와의 비교**
-  - PMI vs JMX + monitor-1.0
-  - Tivoli Performance Viewer vs LibriX 대시보드
 
 **스크린샷:** 11개
+
+</details>
+
+### 문제 분석
+
+#### [덤프생성](docs/troubleshooting/dump-generation.md) ⭐ 신규
+
+Liberty 서버의 문제를 진단하기 위해 스레드 덤프, 힙 덤프, 시스템 덤프를 생성하는 방법을 설명합니다.
+
+<details>
+<summary><strong>📋 주요 내용 보기</strong></summary>
+
+- **덤프생성 개요**
+  - 덤프 유형 (스레드/힙/시스템)
+  - 덤프 파일 저장 위치
+  - 파일명 규칙
+
+- **스레드 덤프**
+  - 생성 프로세스 (enabled → RUNNING → enabled)
+  - 생성 파일: javacore.{timestamp}.txt (2-3 MB)
+  - **사용 시나리오**:
+    - 응답 없음 (Hang) - 데드락 탐지
+    - 높은 CPU - 무한 루프 파악
+    - 스레드 풀 고갈 - I/O 대기 분석
+  - 분석 도구: FastThread, IBM TMDA
+
+- **힙 덤프**
+  - 생성 파일: heapdump.{timestamp}.phd (24+ MB)
+  - **사용 시나리오**:
+    - 메모리 누수 - 객체 참조 관계 분석
+    - OutOfMemoryError - 큰 객체 확인
+    - 메모리 사용량 최적화
+    - GC 튜닝
+  - 분석 도구: Eclipse MAT (Leak Suspects, Dominator Tree, Histogram, OQL)
+
+- **시스템 덤프**
+  - 생성 파일: javacore.{timestamp}.txt
+  - **사용 시나리오**:
+    - JVM 크래시 - SIGSEGV, SIGBUS
+    - 네이티브 메모리 누수 - DirectByteBuffer
+    - JNI 문제 - UnsatisfiedLinkError
+  - 파일 형식 차이 (IBM J9 vs OpenJDK)
+  - ulimit 설정 및 core 파일 생성
+
+- **실전 문제 해결**
+  - 시나리오 1: 애플리케이션 응답 느림
+    - 스레드 덤프 → DB 대기 발견
+    - 힙 덤프 → 캐시 과다 사용
+    - 해결: 인덱스 추가, 캐시 크기 제한
+  - 시나리오 2: OutOfMemoryError
+    - 힙 덤프 자동 수집
+    - Eclipse MAT 분석
+    - 해결: 스트리밍 처리로 전환
+
+- **모범 사례**
+  - 프로덕션 환경 주의사항
+  - 디스크 공간 관리
+  - 백업 및 보관
+  - 자동화 스크립트
+
+- **Liberty 공식 명령어**
+  - server dump, javadump
+
+**스크린샷:** 7개
 
 </details>
 
@@ -530,12 +577,18 @@ LibriX는 Open Liberty 및 WebSphere Liberty를 기반으로 하며, Liberty의 
 - SSL/TLS 구성
 - 인증서 관리
 
-**모니터링 및 문제 분석**
+**모니터링**
 - 서버 모니터링 (CPU, 메모리, 스레드)
 - 연결 풀 모니터링
 - JNDI 네임스페이스 현황
 - 실시간 대시보드 (텍스트/그래픽)
 - 성능 추세 분석
+
+**문제 분석**
+- 덤프 생성 (스레드/힙/시스템)
+- 실시간 문제 진단
+- 메모리 누수 탐지
+- 성능 병목 분석
 
 ## 지원 데이터베이스
 
@@ -554,69 +607,64 @@ LibriX는 다음 데이터베이스를 공식 지원합니다:
 
 다음 문서들이 추가될 예정입니다:
 
-- **문제 분석**: 덤프 생성, 서비스 지원확인 (Log Analyzer 연동)
+- **서비스 지원확인**: Log Analyzer 연동 (추후 개발)
 - **로그 관리**: 통합 로그 수집 및 분석
 - **성능 튜닝**: 고급 성능 최적화 가이드
 
 ## 최근 업데이트
 
 ### 2026-01-27 ⭐ 신규
-- ✅ **모니터링** 문서 추가 (서버/연결풀/네임스페이스/대시보드)
-- ✅ 5개 모니터링 기능 문서화:
-  - 서버 모니터링 (모니터링 시작/중지, JMX 기반 메트릭)
-  - 연결 풀 모니터링 (DB 연결 상태 추적)
-  - 네임스페이스 현황 (JNDI 구조 확인)
-  - 모니터링 대시보드 (Instance/DB 성능 테이블)
-  - 모니터링 대시보드 (그래픽) - 4개 시계열 그래프
+- ✅ **덤프생성** 문서 추가 (스레드/힙/시스템 덤프)
+- ✅ 3가지 덤프 유형 상세 설명:
+  - 스레드 덤프 (응답 없음, 높은 CPU, 스레드 풀 고갈)
+  - 힙 덤프 (메모리 누수, OutOfMemoryError, GC 튜닝)
+  - 시스템 덤프 (JVM 크래시, 네이티브 메모리 누수, JNI 문제)
+- ✅ 실전 문제 해결 시나리오 2개
+- ✅ 분석 도구 가이드 (Eclipse MAT, FastThread, IBM TMDA)
+- ✅ 7개 스크린샷 추가
+- ✅ 모범 사례 및 Liberty 공식 명령어 포함
+
+### 2026-01-27
+- ✅ **모니터링** 문서 추가
 - ✅ 11개 스크린샷 추가
-- ✅ 모범 사례 및 문제 해결 가이드 포함
 
 ### 2026-01-20
-- ✅ **사용자 관리** 문서 추가
-- ✅ **J2C 인증 데이터** 문서 추가
-- ✅ **SSL 구성** 문서 추가
-- ✅ **인증서 관리** 문서 추가
+- ✅ **보안 관리** 문서 4개 추가
 - ✅ 31개 스크린샷 추가
 
 ### 2026-01-19
-- ✅ **배치 관리자 관리** 문서 추가
-- ✅ **노드 관리** 문서 추가
-- ✅ **노드 에이전트 관리** 문서 추가
+- ✅ **시스템 관리** 문서 3개 추가
 - ✅ 7개 스크린샷 추가
 
 ### 2026-01-15
-- ✅ **Liberty 변수 관리** 문서 추가
-- ✅ **가상호스트 관리** 문서 추가
-- ✅ **공유 라이브러리 관리** 문서 추가
+- ✅ **환경 관리** 문서 3개 추가
 - ✅ 11개 스크린샷 추가
 
 ### 2026-01-13
-- ✅ **JDBC 제공자 관리** 문서 추가
-- ✅ **데이터소스 관리** 문서 추가
+- ✅ **리소스 관리** 문서 2개 추가
 - ✅ 20개 스크린샷 추가
 
 ### 2026-01-09
-- ✅ **애플리케이션 설치** 문서 추가
-- ✅ **엔터프라이즈 애플리케이션 관리** 문서 추가
+- ✅ **애플리케이션 관리** 문서 2개 추가
 
 ## GitHub 업로드 방법
 
 ```bash
 # 1. 압축 해제
-unzip librix-monitoring-docs.zip
+unzip librix-troubleshooting-docs.zip
 
 # 2. GitHub 저장소로 이동
 cd your-github-repo
 
 # 3. 파일 복사
-cp -r monitoring/* docs/
+cp -r troubleshooting/* docs/
 
 # 4. README.md 업데이트
-cp README.md .
+cp README_UPDATED.md README.md
 
 # 5. Git에 추가 및 커밋
-git add README.md docs/monitoring/
-git commit -m "Add Monitoring documentation (Server, Connection Pool, Namespace, Dashboard, Graphic)"
+git add README.md docs/troubleshooting/
+git commit -m "Add Troubleshooting documentation (Dump Generation)"
 git push
 ```
 
