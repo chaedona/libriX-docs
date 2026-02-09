@@ -18,7 +18,7 @@ docs/
 │       ├── app_server/             # 애플리케이션 서버 이미지 (12개)
 │       ├── web_server/             # 웹서버 이미지 (8개)
 │       ├── session_server/         # 세션 서버 이미지 (3개)
-│       └── cluster/                # 클러스터 이미지 (5개)
+│       └── cluster/                # 클러스터 이미지 (6개)
 ├── application/                    # 애플리케이션 관리 문서
 │   ├── application-install.md      # 애플리케이션 설치
 │   ├── enterprise-application.md   # 엔터프라이즈 애플리케이션 관리
