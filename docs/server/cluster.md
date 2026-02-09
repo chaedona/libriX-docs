@@ -1176,7 +1176,7 @@ chown -R liberty:liberty /shared/tranlog
 
 <!-- 모든 서버가 동일한 자격증명 사용 -->
 <authData id="dbAuth" user="dbuser" password="dbpass"/>
-
+```
 ## 클러스터와 애플리케이션 서버
 
 ### 클러스터 멤버 추가
