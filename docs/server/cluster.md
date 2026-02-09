@@ -605,9 +605,577 @@ LibriX는 이 과정을 단계별로 나누어 더 직관적으로 제공합니�
 
 LibriX는 WebSphere ND의 복잡한 동기화 과정을 자동화하고, 더 직관적인 확인 프로세스를 제공합니다.
 
-## 클러스터 상세 정보
+## 클러스터 페일오버 정책
 
-클러스터 목록에서 클러스터 이름을 클릭하면 해당 클러스터의 상세 정보 페이지로 이동합니다. 상세 페이지에서는 클러스터의 구성 정보와 멤버 서버 목록을 확인할 수 있습니다. (클러스터 상세 화면이 제공되면 이 섹션이 추가될 예정입니다.)
+클러스터 목록에서 클러스터 이름을 클릭한 후 "구성" 탭을 선택하면 클러스터의 페일오버(Failover) 정책을 설정할 수 있습니다.
+
+![클러스터 페일오버 구성](images/cluster/cluster_failover.png)
+
+### 페일오버 정책 화면
+
+페일오버 정책 화면은 클러스터 멤버 간 트랜잭션 복구(Transaction Peer Recovery)를 통해 고가용성을 제공하는 설정을 관리합니다.
+
+#### 일반 특성
+
+**클러스터 이름**
+
+현재 구성 중인 클러스터의 이름이 표시됩니다 (예: MyCluster).
+
+이 필드는 읽기 전용이며, 어떤 클러스터의 페일오버 정책을 구성하고 있는지 확인할 수 있습니다.
+
+**클러스터 멤버 간 트랜잭션 페일오버**
+
+체크박스를 선택하면 클러스터 멤버 간 트랜잭션 페일오버(Transaction Peer Recovery)를 활성화합니다.
+
+**기능:**
+- 서버 장애 시 중단된 트랜잭션을 다른 멤버 서버가 자동으로 복구
+- 리소스 락(Resource Lock) 자동 해제
+- 2-Phase Commit (XA) 트랜잭션의 무결성 보장
+- 클러스터 환경에서 안전한 트랜잭션 관리
+
+### Transaction Peer Recovery란?
+
+Open Liberty의 Transaction Peer Recovery는 클러스터 환경에서 서버 장애 발생 시 중단된 트랜잭션을 자동으로 복구하는 기능입니다.
+
+#### 작동 원리
+
+**1. 피어 모니터링**
+
+```
+클러스터 멤버 서버들이 서로를 지속적으로 모니터링:
+
+Server1 ←→ Server2 ←→ Server3
+   ↓         ↓         ↓
+ 정상      정상      정상
+```
+
+각 서버는 동일한 `recoveryGroup`에 속한 다른 서버들을 모니터링하며, 서버가 삭제되거나 장애가 발생하면 이를 감지합니다.
+
+**2. 장애 감지 및 복구**
+
+```
+Server1이 장애 발생:
+
+Server1 (장애)
+   ↓
+Server2가 감지
+   ↓
+Server2가 Server1의 트랜잭션 로그 접근
+   ↓
+중단된 트랜잭션 복구
+   ↓
+리소스 락 해제
+```
+
+장애가 발생한 서버의 트랜잭션 로그를 사용하여 중단된 트랜잭션을 완료하거나 롤백합니다.
+
+#### 구성 방법
+
+페일오버 정책을 활성화하면 각 클러스터 멤버의 `server.xml`에 다음과 같은 구성이 자동으로 추가됩니다:
+
+**server.xml 예시:**
+
+```xml
+<server>
+  <featureManager>
+    <feature>transaction-2.0</feature>
+  </featureManager>
+  
+  <!-- 트랜잭션 복구 구성 -->
+  <transaction 
+    recoveryGroup="clusters:MyCluster"
+    recoveryIdentity="hosts:localhost.localdomain:servers:LibertyServer001"/>
+</server>
+```
+
+**구성 속성 설명:**
+
+**recoveryGroup**
+- 형식: `clusters:<클러스터명>`
+- 의미: 동일한 복구 그룹에 속한 서버들을 식별
+- 예시: `clusters:MyCluster`
+- 역할: 같은 recoveryGroup 값을 가진 서버들끼리 서로를 모니터링하고 필요 시 복구 수행
+
+**recoveryIdentity**
+- 형식: `hosts:<호스트명>:servers:<서버명>`
+- 의미: 클러스터 내에서 서버를 고유하게 식별
+- 예시: `hosts:localhost.localdomain:servers:LibertyServer001`
+- 역할: 복구 대상 서버를 정확히 식별하고 트랜잭션 로그를 구분
+
+**클러스터 멤버별 구성 예시:**
+
+```xml
+<!-- Server1 -->
+<transaction 
+  recoveryGroup="clusters:MyCluster"
+  recoveryIdentity="hosts:host1.example.com:servers:Server1"/>
+
+<!-- Server2 -->
+<transaction 
+  recoveryGroup="clusters:MyCluster"
+  recoveryIdentity="hosts:host2.example.com:servers:Server2"/>
+
+<!-- Server3 -->
+<transaction 
+  recoveryGroup="clusters:MyCluster"
+  recoveryIdentity="hosts:host3.example.com:servers:Server3"/>
+```
+
+모든 멤버는 동일한 `recoveryGroup`을 공유하지만, 각각 고유한 `recoveryIdentity`를 가집니다.
+
+### 트랜잭션 로그 관리
+
+Transaction Peer Recovery가 작동하려면 클러스터의 모든 멤버가 서로의 트랜잭션 로그에 접근할 수 있어야 합니다.
+
+#### 트랜잭션 로그 저장 방식
+
+**1. 공유 파일 시스템 (권장)**
+
+```xml
+<transaction 
+  recoveryGroup="clusters:MyCluster"
+  recoveryIdentity="hosts:host1:servers:Server1"
+  transactionLogDirectory="/shared/tranlog/Server1"/>
+```
+
+**요구사항:**
+- NFS, CIFS 등 공유 스토리지 사용
+- 모든 클러스터 멤버가 읽기/쓰기 접근 가능
+- POSIX 파일 락킹 지원
+
+**주의사항:**
+- 데이터센터를 넘어가는 공유 파일 시스템은 지원되지 않음
+- POSIX 락킹 시맨틱 구현의 어려움으로 인한 제한
+
+**Kubernetes 환경:**
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tranlog-pvc
+spec:
+  accessModes:
+    - ReadWriteMany  # RWX 모드
+  resources:
+    requests:
+      storage: 10Gi
+```
+
+**2. 데이터베이스 저장 (대안)**
+
+```xml
+<transaction 
+  recoveryGroup="clusters:MyCluster"
+  recoveryIdentity="${HOSTNAME}${wlp.server.name}"
+  transactionLogDBTableSuffix="${HOSTNAME}${wlp.server.name}">
+  
+  <dataSource transactional="false">
+    <jdbcDriver libraryRef="postgresql"/>
+    <properties 
+      databaseName="tranlog_db"
+      serverName="db.example.com"
+      portNumber="5432"
+      user="tranlog_user"
+      password="tranlog_pass"/>
+  </dataSource>
+</transaction>
+```
+
+**장점:**
+- 데이터센터 간 복제 가능
+- 높은 가용성
+- 중앙 집중식 관리
+
+**주의사항:**
+- 데이터베이스 성능이 트랜잭션 처리 성능에 영향
+- 데이터베이스 장애 시 트랜잭션 복구 불가능
+
+#### 트랜잭션 로그 디렉토리 구조
+
+**공유 파일 시스템 예시:**
+
+```
+/shared/tranlog/
+├── Server1/
+│   ├── tranlog/
+│   │   ├── log1
+│   │   └── log2
+│   └── partnerlog/
+├── Server2/
+│   ├── tranlog/
+│   └── partnerlog/
+└── Server3/
+    ├── tranlog/
+    └── partnerlog/
+```
+
+각 서버는 자신의 디렉토리에만 쓰기를 하지만, 다른 서버의 디렉토리는 읽기 가능해야 합니다.
+
+### 페일오버 시나리오
+
+#### 시나리오 1: 서버 장애 중 트랜잭션 복구
+
+```
+1. 사용자 요청 → Server1에서 XA 트랜잭션 시작
+   - 데이터베이스 업데이트
+   - JMS 메시지 전송
+   - 트랜잭션 로그 기록
+
+2. Server1 장애 발생 (하드웨어 고장)
+   - 트랜잭션이 PREPARED 상태로 중단
+   - 데이터베이스와 JMS에 리소스 락 유지
+
+3. Server2가 Server1 장애 감지
+   - 주기적인 피어 모니터링으로 감지
+   - Server1의 트랜잭션 로그 접근
+
+4. Server2가 중단된 트랜잭션 복구
+   - 트랜잭션 로그 분석
+   - PREPARED 상태의 트랜잭션 확인
+   - 데이터베이스와 JMS에 COMMIT 또는 ROLLBACK
+
+5. 리소스 락 해제
+   - 다른 트랜잭션이 해당 리소스 사용 가능
+   - 시스템 정상화
+```
+
+#### 시나리오 2: 계획된 서버 중지
+
+```
+1. 관리자가 Server1 중지 요청
+
+2. Graceful Shutdown 시작
+   - 새 요청 거부
+   - 진행 중인 트랜잭션 완료 대기
+
+3. 모든 트랜잭션 완료 확인
+   - 트랜잭션 로그 최종 동기화
+   - 클린한 상태로 종료
+
+4. Server1 중지 완료
+   - 복구가 필요한 트랜잭션 없음
+   - 피어 서버의 복구 작업 불필요
+```
+
+#### 시나리오 3: 네트워크 분리 (Split-Brain)
+
+```
+1. 네트워크 파티션 발생
+   - Server1과 Server2, Server3 간 통신 단절
+   - Server1은 정상 동작 중
+   - Server2, Server3도 정상 동작 중
+
+2. Server2, Server3가 Server1을 장애로 인식
+   - 하지만 Server1의 트랜잭션 로그에 접근 시도
+   - 트랜잭션 로그의 하트비트 확인
+
+3. 하트비트가 최신인 경우
+   - Server1이 여전히 활성 상태로 판단
+   - 복구 작업 수행하지 않음
+   - 네트워크 복구 대기
+
+4. 네트워크 복구 후
+   - 정상적인 피어 모니터링 재개
+   - 복구 작업 없이 정상 운영 지속
+```
+
+### 모범 사례
+
+**1. 공유 스토리지 구성**
+
+```xml
+<!-- 권장: 각 서버별 독립 디렉토리 -->
+<transaction 
+  recoveryGroup="clusters:ProductionCluster"
+  recoveryIdentity="hosts:${HOSTNAME}:servers:${wlp.server.name}"
+  transactionLogDirectory="/shared/tranlog/${HOSTNAME}/${wlp.server.name}"/>
+```
+
+**장점:**
+- 서버별 트랜잭션 로그 격리
+- 동적 서버 이름 지원
+- 확장성 우수
+
+**2. 데이터베이스 방식 선택 시**
+
+```xml
+<transaction 
+  recoveryGroup="clusters:ProductionCluster"
+  recoveryIdentity="${HOSTNAME}${wlp.server.name}"
+  transactionLogDBTableSuffix="${HOSTNAME}${wlp.server.name}"
+  recoverOnStartup="false">
+  
+  <dataSource transactional="false">
+    <!-- JNDI로 데이터소스 참조 권장 -->
+    <jdbcDriver libraryRef="dbDriver"/>
+    <properties.postgresql 
+      databaseName="${DB_NAME}"
+      serverName="${DB_HOST}"
+      portNumber="${DB_PORT}"
+      user="${DB_USER}"
+      password="${DB_PASSWORD}"/>
+  </dataSource>
+</transaction>
+```
+
+**주의사항:**
+- `transactional="false"` 필수 (순환 참조 방지)
+- 데이터베이스 연결 풀 튜닝 필요
+- `recoverOnStartup="false"` 설정으로 시작 시간 단축
+
+**3. Kubernetes 환경 설정**
+
+```yaml
+# StatefulSet 사용
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: liberty-cluster
+spec:
+  serviceName: "liberty"
+  replicas: 3
+  template:
+    spec:
+      containers:
+      - name: liberty
+        env:
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        volumeMounts:
+        - name: tranlog
+          mountPath: /shared/tranlog
+  volumeClaimTemplates:
+  - metadata:
+      name: tranlog
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      resources:
+        requests:
+          storage: 10Gi
+```
+
+**4. 모니터링 및 로그**
+
+```
+# 트랜잭션 복구 시작 로그
+[AUDIT] WTRN0108I: Server with identity host1:Server1 is monitoring its peers for Transaction Peer Recovery
+
+# 피어 장애 감지 로그
+[AUDIT] WTRN0133I: Peer recovery processing for server host2:Server2 has started
+
+# 복구 완료 로그
+[AUDIT] WTRN0134I: Peer recovery processing for server host2:Server2 has completed
+```
+
+**모니터링 항목:**
+- 복구 그룹 멤버십 상태
+- 트랜잭션 로그 크기
+- 복구 작업 빈도
+- 복구 소요 시간
+
+**5. 테스트 시나리오**
+
+정기적으로 다음 시나리오를 테스트하세요:
+
+```bash
+# 1. 서버 강제 종료 테스트
+kill -9 <server-pid>
+
+# 2. 트랜잭션 로그 확인
+ls -lh /shared/tranlog/Server1/tranlog/
+
+# 3. 복구 로그 확인
+grep "WTRN0133I\|WTRN0134I" /logs/messages.log
+
+# 4. 리소스 락 해제 확인
+# 데이터베이스에서 락 상태 조회
+SELECT * FROM pg_locks WHERE NOT granted;
+```
+
+### 제약사항 및 주의사항
+
+**1. 공유 파일 시스템 제한**
+
+- 데이터센터 간 공유 파일 시스템은 **지원되지 않음**
+- POSIX 락킹이 제대로 구현되지 않은 파일 시스템 사용 불가
+- 단일 데이터센터 내에서만 공유 스토리지 사용 권장
+
+**2. 리소스 접근 권한**
+
+복구를 수행하는 서버는 장애 서버와 동일한 리소스에 접근할 수 있어야 합니다:
+
+```
+Server1의 트랜잭션:
+- Database A (xa/xa-pool-1)
+- JMS Queue B (jms/queue-1)
+
+Server2가 복구하려면:
+- Database A 접근 가능 (동일한 JNDI 이름, 동일한 자격증명)
+- JMS Queue B 접근 가능 (동일한 JNDI 이름, 동일한 자격증명)
+```
+
+**3. InstantOn 사용 시**
+
+Open Liberty InstantOn을 사용하는 경우 추가 제약사항이 있습니다:
+
+```xml
+<!-- InstantOn과 함께 사용 시 -->
+<transaction 
+  recoveryGroup="peer-group-name"
+  recoveryIdentity="${HOSTNAME}${wlp.server.name}"
+  recoverOnStartup="false"/>
+```
+
+체크포인트 전에 트랜잭션이 시작되면 안 됩니다. `loadOnStartup` servlet이나 초기 시작 코드에서 트랜잭션을 시작하지 마세요.
+
+**4. 성능 고려사항**
+
+- 피어 모니터링 오버헤드: 각 서버가 주기적으로 다른 서버 상태 확인
+- 트랜잭션 로그 I/O: 공유 스토리지의 성능이 중요
+- 복구 처리 시간: 대량의 중단된 트랜잭션이 있을 경우 복구에 시간 소요
+
+### 페일오버 설정 저장
+
+페일오버 정책 설정을 완료한 후:
+
+**이전**
+
+클러스터 목록 화면으로 돌아갑니다. 변경사항은 저장되지 않습니다.
+
+**적용**
+
+변경사항을 저장하고 클러스터의 모든 멤버에 적용합니다.
+
+적용 버튼을 클릭하면:
+1. 각 멤버 서버의 `server.xml`에 `<transaction>` 요소가 추가/업데이트됩니다
+2. `recoveryGroup`과 `recoveryIdentity` 속성이 설정됩니다
+3. 서버 재시작 후 Transaction Peer Recovery가 활성화됩니다
+4. 변경사항 확인 메시지가 표시됩니다
+
+**주의사항:**
+- Transaction Peer Recovery 활성화 후 서버 재시작이 필요합니다
+- 공유 스토리지 또는 데이터베이스 구성이 사전에 완료되어 있어야 합니다
+- 모든 클러스터 멤버에 동일한 트랜잭션 리소스 접근 권한이 있어야 합니다
+
+### WebSphere ND와의 비교
+
+**WebSphere ND Transaction Recovery:**
+
+```
+특징:
+- 복잡한 Transaction Service 구성
+- Deployment Manager 기반 중앙 관리
+- 파일 시스템 또는 데이터베이스 로그
+- Recovery Manager 컴포넌트
+
+구성 방법:
+- Administrative Console에서 설정
+- Cell → Transaction Service 구성
+- Recovery Log 위치 지정
+- Peer Recovery 정책 설정
+```
+
+**Liberty (LibriX) Transaction Peer Recovery:**
+
+```
+특징:
+- 간단한 server.xml 구성
+- recoveryGroup 기반 피어 복구
+- 자동 피어 모니터링
+- 경량 구현
+
+구성 방법:
+- server.xml의 <transaction> 요소
+- recoveryGroup과 recoveryIdentity 속성만 설정
+- 자동으로 피어 모니터링 시작
+- 추가 관리 컴포넌트 불필요
+```
+
+### 관련 Liberty 문서
+
+- [Transaction Service](https://openliberty.io/docs/latest/transaction-service.html)
+- [Transaction Configuration Reference](https://openliberty.io/docs/latest/reference/config/transaction.html)
+- [Distributed Transactions](https://openliberty.io/docs/latest/data-persistence-jpa.html#_transaction_handling)
+
+### 트러블슈팅
+
+**문제 1: 피어 복구가 시작되지 않음**
+
+```
+# 로그 확인
+grep "WTRN0108I" /logs/messages.log
+
+# 기대 로그
+[AUDIT] WTRN0108I: Server with identity host1:Server1 is monitoring its peers
+```
+
+**원인:**
+- recoveryGroup 또는 recoveryIdentity 미설정
+- transaction-2.0 feature 누락
+
+**해결:**
+```xml
+<featureManager>
+  <feature>transaction-2.0</feature>
+</featureManager>
+
+<transaction 
+  recoveryGroup="clusters:MyCluster"
+  recoveryIdentity="hosts:${HOSTNAME}:servers:${wlp.server.name}"/>
+```
+
+**문제 2: 트랜잭션 로그 접근 실패**
+
+```
+# 오류 로그
+[ERROR] WTRN0046E: Unable to access transaction log files
+```
+
+**원인:**
+- 공유 스토리지 마운트 실패
+- 파일 권한 문제
+- 네트워크 문제
+
+**해결:**
+```bash
+# 파일 시스템 확인
+df -h /shared/tranlog
+mount | grep tranlog
+
+# 권한 확인
+ls -ld /shared/tranlog
+chmod 755 /shared/tranlog
+
+# Liberty 사용자에게 쓰기 권한 부여
+chown -R liberty:liberty /shared/tranlog
+```
+
+**문제 3: 복구가 완료되지 않음**
+
+```
+# 로그에서 복구 시작은 있지만 완료 없음
+[AUDIT] WTRN0133I: Peer recovery processing has started
+# WTRN0134I 로그 없음
+```
+
+**원인:**
+- 리소스 접근 불가
+- 데이터베이스 연결 실패
+- 잘못된 자격증명
+
+**해결:**
+```xml
+<!-- 모든 서버가 동일한 데이터소스 JNDI 이름 사용 -->
+<dataSource id="xa-pool-1" jndiName="jdbc/myDB">
+  <jdbcDriver libraryRef="postgresql"/>
+  <properties.postgresql .../>
+</dataSource>
+
+<!-- 모든 서버가 동일한 자격증명 사용 -->
+<authData id="dbAuth" user="dbuser" password="dbpass"/>
 
 ## 클러스터와 애플리케이션 서버
 
