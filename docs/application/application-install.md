@@ -335,27 +335,6 @@ JSP 파일은 처음 요청될 때 컴파일됩니다. 이 방식을 "지연 컴
 | **스테이징** | ✅ 선택 | 프로덕션 환경 시뮬레이션 |
 | **프로덕션** | ✅ 선택 | 최적 성능 및 보안 |
 
-**Open Liberty에서의 구현**
-
-Liberty에서 JSP 사전 컴파일은 `<jspEngine>` 요소의 `prepareJSPs` 속성으로 제어됩니다:
-
-```xml
-<server>
-  <webContainer>
-    <!-- JSP 사전 컴파일 활성화 -->
-    <jspEngine prepareJSPs="0"/>
-    
-    <!-- 또는 비활성화 (On-Demand) -->
-    <!-- <jspEngine prepareJSPs="-1"/> -->
-  </webContainer>
-</server>
-```
-
-`prepareJSPs` 속성 값:
-- `0`: 모든 JSP를 즉시 컴파일 (사전 컴파일)
-- `-1`: JSP를 요청 시에만 컴파일 (On-Demand, 기본값)
-- 양수 값: 백그라운드 스레드 수를 지정하여 병렬 컴파일
-
 **성능 고려사항**
 
 사전 컴파일 시 배포 시간 예측:
@@ -397,8 +376,8 @@ Liberty는 WebSphere ND와 동일한 개념을 사용하지만, 더 간결한 �
 
 **기본값:** `${APP_INSTALL_HOME}/`
 
-이는 Liberty의 `server.config.dir` 변수를 기반으로 한 경로이며, 일반적으로 다음과 같이 해석됩니다:
-- `${server.config.dir}/apps/` (표준 애플리케이션 디렉토리)
+이는 Librix 변수( 메뉴 > 환경 > Liberty 변수 )에 기본 정의된 경로이며, 일반적으로 기본값은 아래와 같습니다.
+- [Librix 설치 홈디렉토리]/apps
 
 **사용자 정의 경로:**
 
@@ -533,16 +512,6 @@ WebSphere ND에서는 "Class loading and update detection" 설정에서 동일�
 - "Polling interval for updated files" (초)
 - IBM은 개발 환경에서 3초를 권장합니다
 
-Liberty의 server.xml에서는 다음과 같이 표현됩니다:
-
-```xml
-<applicationMonitor updateTrigger="polled" pollingRate="3s"/>
-
-<webApplication id="myapp" ...>
-  <classloader delegation="parentLast"/>
-</webApplication>
-```
-
 #### JSP 리로딩
 
 **JSP 리로딩** (체크박스, 선택됨)
@@ -602,21 +571,13 @@ WebSphere ND에서는 "JSP and JSF options" 설정에서 동일한 기능을 제
 - "Reload interval" (초)
 - 기본 간격은 5초입니다
 
-Liberty의 server.xml에서는 ibm-web-ext.xml 파일에서 다음과 같이 표현됩니다:
+Liberty에서도 ND와 동일하게 ibm-web-ext.xml 파일에서 다음과 같이 표현됩니다:
 
 ```xml
 <jsp-attributes>
   <jsp-attribute name="reloadingEnabled" value="true"/>
   <jsp-attribute name="reloadInterval" value="3"/>
 </jsp-attributes>
-```
-
-또는 server.xml에서:
-
-```xml
-<webContainer>
-  <jspEngine reloadingEnabled="true" reloadInterval="3"/>
-</webContainer>
 ```
 
 #### 클래스 리로딩 vs JSP 리로딩 비교
@@ -691,9 +652,8 @@ LibriX는 다음 배포 대상을 지원합니다:
 
 웹서버 배포의 특징:
 - 애플리케이션이 백엔드 애플리케이션 서버에 배포됩니다
-- 웹서버의 플러그인 구성이 자동으로 업데이트됩니다
+- 웹서버의 플러그인 구성시 해당 애플리케이션 정보와 배포된 애플리케이션 서버의 정보를 반영합니다.
 - 웹서버를 통한 HTTP 요청이 애플리케이션 서버로 라우팅됩니다
-- 정적 컨텐츠는 웹서버에서, 동적 컨텐츠는 애플리케이션 서버에서 처리됩니다
 
 **애플리케이션 서버 대상**
 
@@ -872,7 +832,7 @@ WebSphere ND는 Cell, Node, Server의 계층 구조를 사용합니다:
 **LibriX 배포 대상 선택:**
 
 LibriX는 더 간소화된 구조를 제공합니다:
-- 호스트 → 서버 또는 클러스터
+- 서버 또는 클러스터
 - 평면적인 목록 형태로 표시
 - 직관적인 선택 인터페이스
 
@@ -938,15 +898,7 @@ LibriX의 장점:
 
 **default_host의 기본 설정:**
 
-Liberty의 `server.xml`에서 default_host는 다음과 같이 구성됩니다:
-
-```xml
-<virtualHost id="default_host">
-  <hostAlias>*:9080</hostAlias>
-  <hostAlias>*:9443</hostAlias>
-</virtualHost>
-```
-
+default_host는 자동으로 생성되는 가상호스트이기 때문에 수정이 불가능 하며, server.xml 파일내 httpEndpoint로 정의된 포트들과 자동 맵핑 됩니다.
 이 설정은 모든 호스트명(`*`)에서 포트 9080(HTTP)과 9443(HTTPS)으로 들어오는 요청을 처리합니다.
 
 **default_host 사용 시 접근 방법:**
@@ -1765,7 +1717,7 @@ http://server-hostname:9080/context-root
 3. "제거" 또는 "삭제" 기능 사용
 4. 관련 리소스(데이터소스, 큐 등) 정리
 
-**주의:** 애플리케이션을 제거해도 애플리케이션 파일 자체는 서버에 남아있을 수 있습니다. 필요한 경우 수동으로 삭제합니다.
+**주의:** 애플리케이션을 제거해도 애플리케이션 파일 자체는 서버 남아있습니다. 필요한 경우 수동으로 삭제합니다.
 
 ## 문제 해결
 
