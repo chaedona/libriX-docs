@@ -264,29 +264,752 @@ Redis를 JCache 제공자로 사용하는 옵션입니다. 일반적으로 Redis
 
 ### 추가 특성
 
-추가 구성 옵션을 제공합니다. (현재 미구현 상태)
+세션 도메인의 세부 동작을 제어하는 추가 구성 옵션을 제공합니다.
 
 #### 세션 캐시 설정
 
-세션 캐시의 상세 설정을 구성합니다 (향후 구현 예정).
+세션 캐시의 상세 설정을 구성합니다. 이 설정은 세션 데이터가 언제, 어떻게 캐시에 저장되는지를 제어합니다.
 
-예상되는 설정 옵션:
-- 세션 타임아웃
-- 최대 캐시 크기
-- 제거 정책 (LRU, LFU 등)
-- 백업 개수
-- 비동기 백업 여부
+![세션 캐시 설정 화면](images/session_domain/session_cache_settings.png)
+
+**캐시명에 애플리케이션명 추가(기본 컨텍스트 루트)**
+
+체크박스를 선택하면 JCache의 캐시 이름에 애플리케이션 컨텍스트 루트를 포함시킵니다.
+
+이 옵션을 활성화하면 서로 다른 애플리케이션의 세션 데이터가 별도의 캐시에 저장되어 격리됩니다. 동일한 세션 도메인을 여러 애플리케이션이 공유하는 경우 유용합니다.
+
+**예시:**
+- 체크 안함: 캐시 이름 = `liberty.session.cache`
+- 체크함: 캐시 이름 = `liberty.session.cache.myapp` (컨텍스트 루트가 `/myapp`인 경우)
+
+**캐시 구분값**
+
+JCache 캐시의 고유 식별자로 사용할 사용자 정의 문자열을 입력합니다 (선택 사항).
+
+기본값 대신 사용자 지정 캐시 이름을 사용하려는 경우 이 필드에 값을 입력합니다. 여러 세션 도메인이 동일한 JCache 인스턴스를 공유하는 경우 각 도메인을 구분하는 데 사용됩니다.
+
+**세션 캐시 정리 시간 지정**
+
+체크박스를 선택하면 무효화된 캐시 정리 시간 간격을 수동으로 지정할 수 있습니다.
+
+JCache는 만료된 세션 데이터를 주기적으로 정리합니다. 이 옵션을 활성화하면 정리 주기를 직접 제어할 수 있습니다.
+
+**무효화된 캐시 정리 시간 지정(0-23) #1**
+
+첫 번째 정리 작업을 수행할 시간(시)을 입력합니다 (0-23 범위).
+
+예시: `1`을 입력하면 매일 오전 1시에 정리 작업이 실행됩니다.
+
+**무효화된 캐시 정리 시간 지정(0-23) #2**
+
+두 번째 정리 작업을 수행할 시간(시)을 입력합니다 (0-23 범위).
+
+예시: `2`를 입력하면 매일 오전 2시에 두 번째 정리 작업이 실행됩니다.
+
+하루에 여러 번 정리 작업을 실행하여 메모리를 효율적으로 관리할 수 있습니다. 트래픽이 적은 시간대에 정리 작업을 예약하는 것이 좋습니다.
+
+**세션 저장 타입**
+
+세션 데이터를 캐시에 저장할 때 어떤 속성을 저장할지 결정합니다.
+
+드롭다운 메뉴에서 다음 옵션 중 하나를 선택합니다:
+
+**ONLY_SET_ATTRIBUTES (기본값)**
+
+`setAttribute()` 메서드를 통해 명시적으로 설정된 속성만 캐시에 저장합니다.
+
+이 모드는 가장 효율적이며, 필요한 데이터만 복제하므로 네트워크 트래픽과 메모리 사용량을 최소화합니다.
+
+**사용 시나리오:**
+- 대부분의 일반적인 웹 애플리케이션
+- 세션에 저장되는 데이터가 명확하게 정의된 경우
+- 성능 최적화가 중요한 경우
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeContents="ONLY_SET_ATTRIBUTES"
+  cacheManagerRef="CacheManager"/>
+```
+
+**ALL_SESSION_ATTRIBUTES**
+
+세션의 모든 속성을 캐시에 저장합니다. `setAttribute()`로 설정하지 않은 내부 속성도 포함됩니다.
+
+이 모드는 세션 객체의 모든 상태를 완전히 복제하므로, 복잡한 세션 관리가 필요한 경우 유용합니다.
+
+**사용 시나리오:**
+- 레거시 애플리케이션 마이그레이션
+- 세션 객체의 모든 상태가 필요한 경우
+- 세션 속성이 동적으로 변경되는 복잡한 애플리케이션
+
+**주의사항:**
+- 불필요한 데이터까지 복제되어 오버헤드 증가
+- 네트워크 대역폭과 메모리 사용량 증가
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeContents="ALL_SESSION_ATTRIBUTES"
+  cacheManagerRef="CacheManager"/>
+```
+
+**GET_AND_SET_ATTRIBUTES**
+
+`getAttribute()`와 `setAttribute()` 모두 호출된 속성을 캐시에 저장합니다.
+
+읽기 작업도 추적하여 실제로 사용되는 속성만 복제합니다. `ONLY_SET_ATTRIBUTES`보다 더 정밀한 제어를 제공하지만, 약간의 오버헤드가 있습니다.
+
+**사용 시나리오:**
+- 세션 속성 중 일부만 실제로 사용되는 경우
+- 읽기 전용 속성과 쓰기 속성을 구분해야 하는 경우
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeContents="GET_AND_SET_ATTRIBUTES"
+  cacheManagerRef="CacheManager"/>
+```
+
+**세션 저장 시점**
+
+세션 데이터를 캐시에 쓰는 시점을 결정합니다.
+
+드롭다운 메뉴에서 다음 옵션 중 하나를 선택합니다:
+
+**END_OF_SERVLET_SERVICE (기본값)**
+
+서블릿 서비스 메서드가 완료된 직후 세션 데이터를 캐시에 저장합니다.
+
+각 요청이 완료될 때마다 자동으로 세션이 저장되므로, 별도의 코드 작성이 필요 없습니다. 가장 일반적으로 사용되는 옵션입니다.
+
+**작동 방식:**
+```
+사용자 요청 → 서블릿 처리 → 세션 수정
+                           ↓
+                  서블릿 서비스 종료
+                           ↓
+                 세션 데이터 캐시에 저장
+                           ↓
+                    응답 반환
+```
+
+**장점:**
+- 자동 저장으로 편리함
+- 코드 변경 불필요
+- 세션 데이터 손실 가능성 최소화
+
+**단점:**
+- 요청마다 저장 오버헤드 발생
+- 세션이 변경되지 않아도 저장 시도
+
+**사용 시나리오:**
+- 대부분의 웹 애플리케이션
+- 세션 데이터 무결성이 중요한 경우
+- 개발 편의성을 우선하는 경우
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeFrequency="END_OF_SERVLET_SERVICE"
+  cacheManagerRef="CacheManager"/>
+```
+
+**MANUAL_UPDATE**
+
+애플리케이션 코드에서 명시적으로 세션 저장을 트리거할 때만 캐시에 저장합니다.
+
+개발자가 `IBMSession.sync()` 메서드를 호출하여 세션 저장 시점을 직접 제어합니다. 최적의 성능을 위해 필요한 경우에만 저장할 수 있습니다.
+
+**코드 예시:**
+```java
+import com.ibm.websphere.servlet.session.IBMSession;
+
+@WebServlet("/updateProfile")
+public class ProfileServlet extends HttpServlet {
+    
+    protected void doPost(HttpServletRequest request, 
+                         HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        
+        // 세션 속성 수정
+        session.setAttribute("username", request.getParameter("username"));
+        session.setAttribute("email", request.getParameter("email"));
+        
+        // 명시적으로 세션 저장
+        if (session instanceof IBMSession) {
+            ((IBMSession) session).sync();
+        }
+    }
+}
+```
+
+**장점:**
+- 최적의 성능 (필요할 때만 저장)
+- 세션 저장 시점에 대한 완전한 제어
+- 불필요한 저장 작업 제거
+
+**단점:**
+- 코드 수정 필요
+- sync() 호출을 잊으면 세션 데이터 손실 가능
+- 개발자가 저장 로직을 관리해야 함
+
+**사용 시나리오:**
+- 고성능이 요구되는 애플리케이션
+- 세션 변경이 드문 경우
+- 대용량 세션 데이터를 다루는 경우
+- 세션 저장 시점을 최적화하려는 경우
+
+**주의사항:**
+- 중요한 세션 변경 후 반드시 `sync()` 호출
+- 예외 처리 시에도 `sync()` 호출 확인
+- 트랜잭션과 함께 사용 시 커밋 전에 `sync()` 호출
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeFrequency="MANUAL_UPDATE"
+  cacheManagerRef="CacheManager"/>
+```
+
+**TIME_BASED_WRITE**
+
+지정된 시간 간격마다 세션 데이터를 캐시에 저장합니다.
+
+주기적인 저장으로 `END_OF_SERVLET_SERVICE`의 빈번한 저장과 `MANUAL_UPDATE`의 복잡성 사이의 균형을 제공합니다.
+
+**작동 방식:**
+```
+세션 생성/수정
+     ↓
+설정된 간격(예: 10초) 경과
+     ↓
+세션 데이터 캐시에 저장
+     ↓
+다음 간격까지 대기
+```
+
+**장점:**
+- 저장 빈도 조절 가능
+- 코드 수정 불필요
+- 성능과 안정성의 균형
+
+**단점:**
+- 마지막 저장 이후 변경사항은 서버 장애 시 손실 가능
+- 최적의 간격 설정이 필요
+
+**사용 시나리오:**
+- 세션 변경이 빈번한 애플리케이션
+- 일정 수준의 데이터 손실을 허용할 수 있는 경우
+- 성능과 안정성의 균형이 필요한 경우
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeFrequency="TIME_BASED_WRITE"
+  writeInterval="10s"
+  cacheManagerRef="CacheManager"/>
+```
+
+**비교표:**
+
+| 저장 시점 | 저장 빈도 | 성능 | 데이터 안정성 | 코드 변경 | 사용 사례 |
+|---------|---------|------|------------|---------|---------|
+| END_OF_SERVLET_SERVICE | 요청마다 | 낮음 | 높음 | 불필요 | 일반 웹앱 |
+| MANUAL_UPDATE | 필요시만 | 높음 | 중간 | 필요 | 고성능 앱 |
+| TIME_BASED_WRITE | 주기적 | 중간 | 중간 | 불필요 | 균형 필요 |
+
+**쓰기 빈도(초)**
+
+`TIME_BASED_WRITE` 모드를 선택한 경우, 세션 저장 간격(초)을 입력합니다.
+
+기본값: `120`초 (2분)
+
+권장 설정:
+- 빈번한 세션 변경: 30-60초
+- 일반적인 경우: 120-300초 (2-5분)
+- 세션 변경이 드문 경우: 300-600초 (5-10분)
+
+**주의사항:**
+- 너무 짧은 간격: 저장 오버헤드 증가
+- 너무 긴 간격: 서버 장애 시 데이터 손실 위험
+
+**예시:**
+```xml
+<httpSessionCache 
+  writeFrequency="TIME_BASED_WRITE"
+  writeInterval="120s"
+  cacheManagerRef="CacheManager"/>
+```
+### 추가 특성
+
+세션 도메인의 세부 동작을 제어하는 추가 구성 옵션을 제공합니다.
+
+#### 세션 캐시 설정
+
+세션 캐시의 상세 설정을 구성합니다. 이 설정은 세션 데이터가 언제, 어떻게 캐시에 저장되는지를 제어합니다.
+
+![세션 캐시 설정 화면](images/session_domain/session_cache_settings.png)
+
+**캐시명에 애플리케이션명 추가(기본 컨텍스트 루트)**
+
+체크박스를 선택하면 JCache의 캐시 이름에 애플리케이션 컨텍스트 루트를 포함시킵니다.
+
+이 옵션을 활성화하면 서로 다른 애플리케이션의 세션 데이터가 별도의 캐시에 저장되어 격리됩니다. 동일한 세션 도메인을 여러 애플리케이션이 공유하는 경우 유용합니다.
+
+**예시:**
+- 체크 안함: 캐시 이름 = `liberty.session.cache`
+- 체크함: 캐시 이름 = `liberty.session.cache.myapp` (컨텍스트 루트가 `/myapp`인 경우)
+
+**캐시 구분값**
+
+JCache 캐시의 고유 식별자로 사용할 사용자 정의 문자열을 입력합니다 (선택 사항).
+
+기본값 대신 사용자 지정 캐시 이름을 사용하려는 경우 이 필드에 값을 입력합니다. 여러 세션 도메인이 동일한 JCache 인스턴스를 공유하는 경우 각 도메인을 구분하는 데 사용됩니다.
+
+**세션 캐시 정리 시간 지정**
+
+체크박스를 선택하면 무효화된 캐시 정리 시간 간격을 수동으로 지정할 수 있습니다.
+
+JCache는 만료된 세션 데이터를 주기적으로 정리합니다. 이 옵션을 활성화하면 정리 주기를 직접 제어할 수 있습니다.
+
+**무효화된 캐시 정리 시간 지정(0-23) #1**
+
+첫 번째 정리 작업을 수행할 시간(시)을 입력합니다 (0-23 범위).
+
+예시: `1`을 입력하면 매일 오전 1시에 정리 작업이 실행됩니다.
+
+**무효화된 캐시 정리 시간 지정(0-23) #2**
+
+두 번째 정리 작업을 수행할 시간(시)을 입력합니다 (0-23 범위).
+
+예시: `2`를 입력하면 매일 오전 2시에 두 번째 정리 작업이 실행됩니다.
+
+하루에 여러 번 정리 작업을 실행하여 메모리를 효율적으로 관리할 수 있습니다. 트래픽이 적은 시간대에 정리 작업을 예약하는 것이 좋습니다.
+
+**세션 저장 타입**
+
+세션 데이터를 캐시에 저장할 때 어떤 속성을 저장할지 결정합니다.
+
+드롭다운 메뉴에서 다음 옵션 중 하나를 선택합니다:
+
+**ONLY_SET_ATTRIBUTES (기본값)**
+
+`setAttribute()` 메서드를 통해 명시적으로 설정된 속성만 캐시에 저장합니다.
+
+이 모드는 가장 효율적이며, 필요한 데이터만 복제하므로 네트워크 트래픽과 메모리 사용량을 최소화합니다.
+
+**사용 시나리오:**
+- 대부분의 일반적인 웹 애플리케이션
+- 세션에 저장되는 데이터가 명확하게 정의된 경우
+- 성능 최적화가 중요한 경우
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeContents="ONLY_SET_ATTRIBUTES"
+  cacheManagerRef="CacheManager"/>
+```
+
+**ALL_SESSION_ATTRIBUTES**
+
+세션의 모든 속성을 캐시에 저장합니다. `setAttribute()`로 설정하지 않은 내부 속성도 포함됩니다.
+
+이 모드는 세션 객체의 모든 상태를 완전히 복제하므로, 복잡한 세션 관리가 필요한 경우 유용합니다.
+
+**사용 시나리오:**
+- 레거시 애플리케이션 마이그레이션
+- 세션 객체의 모든 상태가 필요한 경우
+- 세션 속성이 동적으로 변경되는 복잡한 애플리케이션
+
+**주의사항:**
+- 불필요한 데이터까지 복제되어 오버헤드 증가
+- 네트워크 대역폭과 메모리 사용량 증가
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeContents="ALL_SESSION_ATTRIBUTES"
+  cacheManagerRef="CacheManager"/>
+```
+
+**GET_AND_SET_ATTRIBUTES**
+
+`getAttribute()`와 `setAttribute()` 모두 호출된 속성을 캐시에 저장합니다.
+
+읽기 작업도 추적하여 실제로 사용되는 속성만 복제합니다. `ONLY_SET_ATTRIBUTES`보다 더 정밀한 제어를 제공하지만, 약간의 오버헤드가 있습니다.
+
+**사용 시나리오:**
+- 세션 속성 중 일부만 실제로 사용되는 경우
+- 읽기 전용 속성과 쓰기 속성을 구분해야 하는 경우
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeContents="GET_AND_SET_ATTRIBUTES"
+  cacheManagerRef="CacheManager"/>
+```
+
+**세션 저장 시점**
+
+세션 데이터를 캐시에 쓰는 시점을 결정합니다.
+
+드롭다운 메뉴에서 다음 옵션 중 하나를 선택합니다:
+
+**END_OF_SERVLET_SERVICE (기본값)**
+
+서블릿 서비스 메서드가 완료된 직후 세션 데이터를 캐시에 저장합니다.
+
+각 요청이 완료될 때마다 자동으로 세션이 저장되므로, 별도의 코드 작성이 필요 없습니다. 가장 일반적으로 사용되는 옵션입니다.
+
+**작동 방식:**
+```
+사용자 요청 → 서블릿 처리 → 세션 수정
+                           ↓
+                  서블릿 서비스 종료
+                           ↓
+                 세션 데이터 캐시에 저장
+                           ↓
+                    응답 반환
+```
+
+**장점:**
+- 자동 저장으로 편리함
+- 코드 변경 불필요
+- 세션 데이터 손실 가능성 최소화
+
+**단점:**
+- 요청마다 저장 오버헤드 발생
+- 세션이 변경되지 않아도 저장 시도
+
+**사용 시나리오:**
+- 대부분의 웹 애플리케이션
+- 세션 데이터 무결성이 중요한 경우
+- 개발 편의성을 우선하는 경우
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeFrequency="END_OF_SERVLET_SERVICE"
+  cacheManagerRef="CacheManager"/>
+```
+
+**MANUAL_UPDATE**
+
+애플리케이션 코드에서 명시적으로 세션 저장을 트리거할 때만 캐시에 저장합니다.
+
+개발자가 `IBMSession.sync()` 메서드를 호출하여 세션 저장 시점을 직접 제어합니다. 최적의 성능을 위해 필요한 경우에만 저장할 수 있습니다.
+
+**코드 예시:**
+```java
+import com.ibm.websphere.servlet.session.IBMSession;
+
+@WebServlet("/updateProfile")
+public class ProfileServlet extends HttpServlet {
+    
+    protected void doPost(HttpServletRequest request, 
+                         HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        
+        // 세션 속성 수정
+        session.setAttribute("username", request.getParameter("username"));
+        session.setAttribute("email", request.getParameter("email"));
+        
+        // 명시적으로 세션 저장
+        if (session instanceof IBMSession) {
+            ((IBMSession) session).sync();
+        }
+    }
+}
+```
+
+**장점:**
+- 최적의 성능 (필요할 때만 저장)
+- 세션 저장 시점에 대한 완전한 제어
+- 불필요한 저장 작업 제거
+
+**단점:**
+- 코드 수정 필요
+- sync() 호출을 잊으면 세션 데이터 손실 가능
+- 개발자가 저장 로직을 관리해야 함
+
+**사용 시나리오:**
+- 고성능이 요구되는 애플리케이션
+- 세션 변경이 드문 경우
+- 대용량 세션 데이터를 다루는 경우
+- 세션 저장 시점을 최적화하려는 경우
+
+**주의사항:**
+- 중요한 세션 변경 후 반드시 `sync()` 호출
+- 예외 처리 시에도 `sync()` 호출 확인
+- 트랜잭션과 함께 사용 시 커밋 전에 `sync()` 호출
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeFrequency="MANUAL_UPDATE"
+  cacheManagerRef="CacheManager"/>
+```
+
+**TIME_BASED_WRITE**
+
+지정된 시간 간격마다 세션 데이터를 캐시에 저장합니다.
+
+주기적인 저장으로 `END_OF_SERVLET_SERVICE`의 빈번한 저장과 `MANUAL_UPDATE`의 복잡성 사이의 균형을 제공합니다.
+
+**작동 방식:**
+```
+세션 생성/수정
+     ↓
+설정된 간격(예: 10초) 경과
+     ↓
+세션 데이터 캐시에 저장
+     ↓
+다음 간격까지 대기
+```
+
+**장점:**
+- 저장 빈도 조절 가능
+- 코드 수정 불필요
+- 성능과 안정성의 균형
+
+**단점:**
+- 마지막 저장 이후 변경사항은 서버 장애 시 손실 가능
+- 최적의 간격 설정이 필요
+
+**사용 시나리오:**
+- 세션 변경이 빈번한 애플리케이션
+- 일정 수준의 데이터 손실을 허용할 수 있는 경우
+- 성능과 안정성의 균형이 필요한 경우
+
+**server.xml 구성:**
+```xml
+<httpSessionCache 
+  writeFrequency="TIME_BASED_WRITE"
+  writeInterval="10s"
+  cacheManagerRef="CacheManager"/>
+```
+
+**비교표:**
+
+| 저장 시점 | 저장 빈도 | 성능 | 데이터 안정성 | 코드 변경 | 사용 사례 |
+|---------|---------|------|------------|---------|---------|
+| END_OF_SERVLET_SERVICE | 요청마다 | 낮음 | 높음 | 불필요 | 일반 웹앱 |
+| MANUAL_UPDATE | 필요시만 | 높음 | 중간 | 필요 | 고성능 앱 |
+| TIME_BASED_WRITE | 주기적 | 중간 | 중간 | 불필요 | 균형 필요 |
+
+**쓰기 빈도(초)**
+
+`TIME_BASED_WRITE` 모드를 선택한 경우, 세션 저장 간격(초)을 입력합니다.
+
+기본값: `120`초 (2분)
+
+권장 설정:
+- 빈번한 세션 변경: 30-60초
+- 일반적인 경우: 120-300초 (2-5분)
+- 세션 변경이 드문 경우: 300-600초 (5-10분)
+
+**주의사항:**
+- 너무 짧은 간격: 저장 오버헤드 증가
+- 너무 긴 간격: 서버 장애 시 데이터 손실 위험
+
+**예시:**
+```xml
+<httpSessionCache 
+  writeFrequency="TIME_BASED_WRITE"
+  writeInterval="120s"
+  cacheManagerRef="CacheManager"/>
+```
+
 
 #### 클라이언트 설정
 
-JCache 클라이언트의 연결 설정을 구성합니다 (향후 구현 예정).
+JCache 클라이언트 모드를 사용하는 경우, 원격 캐시 서버에 연결하기 위한 설정을 구성합니다.
 
-예상되는 설정 옵션:
-- 연결 타임아웃
-- 재시도 정책
-- 로드 밸런싱 정책
-- 스마트 라우팅 활성화
-- SSL/TLS 설정
+![클라이언트 서버 지정 화면](images/session_domain/client_server_settings.png)
+
+**클라이언트 서버**
+
+JCache 클라이언트가 연결할 원격 캐시 서버 목록을 지정합니다.
+
+화면은 두 개의 영역으로 구성됩니다:
+
+**제가 (왼쪽 영역)**
+
+선택 가능한 세션 서버 목록이 표시됩니다. 이 목록은 동일한 세션 도메인에 속하도록 미리 구성된 세션 서버들입니다.
+
+- 체크박스를 사용하여 연결할 서버를 선택합니다
+- 검색 기능을 사용하여 특정 서버를 찾을 수 있습니다
+- 선택한 서버는 오른쪽 화살표 버튼을 클릭하여 "선택" 영역으로 이동합니다
+
+**선택 (오른쪽 영역)**
+
+클라이언트가 실제로 연결할 세션 서버 목록입니다.
+
+- 여러 서버를 선택하여 고가용성을 확보할 수 있습니다
+- 제거하려는 서버는 체크 후 왼쪽 화살표 버튼을 클릭합니다
+- "No data"로 표시되면 아직 서버가 선택되지 않은 상태입니다
+
+**클라이언트-서버 모드 개요**
+
+JCache 클라이언트-서버 모드에서는 애플리케이션 서버(클라이언트)와 전용 세션 서버(서버)가 분리되어 동작합니다.
+
+**아키텍처:**
+```
+애플리케이션 서버 (JCache 클라이언트)
+         ↓ 네트워크 연결
+세션 서버 1, 세션 서버 2, 세션 서버 3
+    (JCache 서버 클러스터)
+```
+
+**장점:**
+- 세션 서버와 애플리케이션 서버의 독립적인 확장
+- 세션 서버 전용 리소스 할당 가능
+- 애플리케이션 서버 재시작 시에도 세션 유지
+- 중앙 집중식 세션 관리
+
+**단점:**
+- 네트워크 지연 발생
+- 추가 인프라 필요
+- 네트워크 장애 시 세션 접근 불가
+
+**Hazelcast 클라이언트 구성 예시:**
+
+```xml
+<server>
+  <featureManager>
+    <feature>sessionCache-1.0</feature>
+  </featureManager>
+
+  <library id="HazelcastClientLib">
+    <fileset dir="/opt/hazelcast-client/lib" includes="*.jar"/>
+  </library>
+
+  <httpSessionCache cacheManagerRef="CacheManager"/>
+
+  <cacheManager id="CacheManager" 
+                uri="file:/config/hazelcast-client.xml">
+    <cachingProvider jCacheLibraryRef="HazelcastClientLib"/>
+  </cacheManager>
+</server>
+```
+
+**hazelcast-client.xml 구성:**
+```xml
+<hazelcast-client>
+  <group>
+    <name>MySessionDomain</name>
+    <password>your-password</password>
+  </group>
+  
+  <network>
+    <cluster-members>
+      <address>session-server-1:5701</address>
+      <address>session-server-2:5701</address>
+      <address>session-server-3:5701</address>
+    </cluster-members>
+    
+    <smart-routing>true</smart-routing>
+    <redo-operation>true</redo-operation>
+    
+    <connection-timeout>5000</connection-timeout>
+    <connection-attempt-limit>3</connection-attempt-limit>
+    <connection-attempt-period>3000</connection-attempt-period>
+  </network>
+  
+  <connection-strategy async-start="false" reconnect-mode="ON">
+    <connection-retry>
+      <initial-backoff-millis>1000</initial-backoff-millis>
+      <max-backoff-millis>30000</max-backoff-millis>
+      <multiplier>1.5</multiplier>
+      <cluster-connect-timeout-millis>-1</cluster-connect-timeout-millis>
+    </connection-retry>
+  </connection-strategy>
+</hazelcast-client>
+```
+
+**Redis 클라이언트 구성 예시:**
+
+```yaml
+# redisson-client-config.yaml
+clusterServersConfig:
+  scanInterval: 2000
+  nodeAddresses:
+    - "redis://session-server-1:6379"
+    - "redis://session-server-2:6379"
+    - "redis://session-server-3:6379"
+  password: "your-redis-password"
+  masterConnectionPoolSize: 64
+  slaveConnectionPoolSize: 64
+  retryAttempts: 3
+  retryInterval: 1500
+  timeout: 3000
+  connectTimeout: 10000
+  
+codec: !<org.redisson.codec.MarshallingCodec> {}
+```
+
+**클라이언트 연결 모범 사례:**
+
+**1. 여러 서버 구성**
+
+고가용성을 위해 최소 2개 이상의 세션 서버를 클라이언트에 지정하세요.
+
+```xml
+<!-- 권장: 3개 이상의 서버 -->
+<cluster-members>
+  <address>session-server-1:5701</address>
+  <address>session-server-2:5701</address>
+  <address>session-server-3:5701</address>
+</cluster-members>
+```
+
+**2. 연결 타임아웃 설정**
+
+적절한 타임아웃을 설정하여 네트워크 문제 시 빠르게 대응할 수 있도록 합니다.
+
+- `connection-timeout`: 5000ms (5초) 권장
+- `connection-attempt-limit`: 3회 권장
+- `connection-attempt-period`: 3000ms (3초) 권장
+
+**3. 재연결 정책**
+
+세션 서버 장애 시 자동으로 재연결하도록 구성합니다.
+
+```xml
+<connection-strategy async-start="false" reconnect-mode="ON">
+  <connection-retry>
+    <initial-backoff-millis>1000</initial-backoff-millis>
+    <max-backoff-millis>30000</max-backoff-millis>
+    <multiplier>1.5</multiplier>
+  </connection-retry>
+</connection-strategy>
+```
+
+**4. 스마트 라우팅**
+
+Hazelcast의 스마트 라우팅을 활성화하여 클라이언트가 데이터 소유자인 서버로 직접 연결하도록 합니다.
+
+```xml
+<smart-routing>true</smart-routing>
+```
+
+**5. 로드 밸런싱**
+
+여러 세션 서버에 클라이언트 연결을 분산하여 부하를 균등하게 배분합니다.
+
+**클라이언트 설정 저장**
+
+클라이언트 서버 지정을 완료한 후:
+
+- **적용**: 선택한 서버 목록을 저장하고 세션 도메인 구성에 반영합니다.
+- **이전**: 변경사항을 저장하지 않고 이전 화면으로 돌아갑니다.
+
+**주의사항:**
+- 클라이언트 설정 변경 후 애플리케이션 서버를 재시작해야 합니다.
+- 선택한 모든 세션 서버가 실행 중이고 네트워크로 접근 가능한지 확인하세요.
+- 방화벽에서 세션 서버의 포트(Hazelcast: 5701, Redis: 6379 등)가 개방되어 있어야 합니다.
+
 
 ### JCache 구현체별 상세 정보
 
