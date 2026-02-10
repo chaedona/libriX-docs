@@ -3121,8 +3121,6 @@ LibriX 관리콘솔에서 설치:
 ```bash
 unzip daytrader8_export_20260109.ear -d daytrader8_export/
 cd daytrader8_export/
-cat ibm-web-bnd.xml
-cat ibm-web-ext.xml
 ```
 
 ### 내보내기 vs 원본 파일 백업
