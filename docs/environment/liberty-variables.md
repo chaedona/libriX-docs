@@ -1,5 +1,24 @@
 # Liberty 변수 관리
+Liberty 변수(Liberty Variables)는 Liberty 서버 구성에서 재사용 가능한 값을 정의하고 관리하는 메커니즘입니다. 구성 파일에서 반복되는 값을 변수로 추상화하고, 환경별로 다른 값을 쉽게 관리하며, 구성의 이식성(Portability)을 향상시키는 방법을 설명합니다.
 
+## 목차
+
+- [개요](#개요)
+- [Liberty 변수 메인 화면](#liberty-변수-메인-화면)
+- [Liberty 변수 유형](#liberty-변수-유형)
+- [Liberty 변수 사용](#liberty-변수-사용)
+- [Liberty 변수 생성](#liberty-변수-생성)
+- [변경사항 저장 및 검토](#변경사항-저장-및-검토)
+- [Liberty 변수 수정 및 삭제](#liberty-변수-수정-및-삭제)
+- [Liberty server.xml 구성](#liberty-serverxml-구성)
+- [문제 해결](#문제-해결)
+- [모범 사례](#모범-사례)
+- [WebSphere ND와의 비교](#websphere-nd와의-비교)
+- [다음 단계](#다음-단계)
+- [참고 자료](#참고-자료)
+- [요약](#요약)
+
+---
 ## 개요
 
 Liberty 변수(Liberty Variables)는 Liberty 서버 구성에서 재사용 가능한 값을 정의하고 관리하는 메커니즘입니다.
