@@ -1172,7 +1172,7 @@ Liberty 변수를 생성하거나 수정한 후 "적용" 버튼을 클릭하면 
 
 ---
 
-## Liberty server.xml 구성
+## Liberty server.env 구성
 
 Liberty 변수는 server.env 파일에 {KEY}={VALUE} 요소로 정의됩니다.
 
