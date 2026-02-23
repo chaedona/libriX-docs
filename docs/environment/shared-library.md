@@ -309,8 +309,7 @@ Liberty는 두 가지 클래스로더 모드를 지원합니다:
 <server>
     <!-- 공유 라이브러리 정의 -->
     <library id="MySQLDriverLib">
-        <fileset dir="${shared.resource.dir}/jdbc/mysql" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/jdbc/mysql" />
     </library>
     
     <!-- JDBC 드라이버에서 참조 -->
@@ -351,8 +350,7 @@ Liberty는 두 가지 클래스로더 모드를 지원합니다:
 ```xml
 <server>
     <library id="ApacheCommonsLib">
-        <fileset dir="${shared.resource.dir}/commons" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/commons" />
     </library>
     
     <!-- 애플리케이션에서 참조 -->
@@ -388,8 +386,7 @@ Liberty는 두 가지 클래스로더 모드를 지원합니다:
 ```xml
 <server>
     <library id="CompanyCommonLib">
-        <fileset dir="${shared.resource.dir}/company" 
-                 includes="company-*.jar"/>
+        <folder dir="${shared.resource.dir}/company" />
     </library>
     
     <application location="hr-app.war">
@@ -424,8 +421,7 @@ Liberty는 두 가지 클래스로더 모드를 지원합니다:
 ```xml
 <server>
     <library id="Log4j2Lib">
-        <fileset dir="${shared.resource.dir}/logging" 
-                 includes="log4j-*.jar"/>
+        <folder dir="${shared.resource.dir}/logging" />
     </library>
     
     <!-- 모든 애플리케이션에 적용 -->
@@ -458,8 +454,7 @@ Liberty는 두 가지 클래스로더 모드를 지원합니다:
 ```xml
 <server>
     <library id="RestClientLib">
-        <fileset dir="${shared.resource.dir}/rest" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/rest" />
     </library>
     
     <application location="api-consumer-1.war">
@@ -643,7 +638,7 @@ ${wlp.user.dir}/shared/libs
 **server.xml 생성 예시:**
 ```xml
 <library id="MySharedLib">
-    <fileset dir="/opt/derby/lib/" includes="*.jar"/>
+    <folder dir="/opt/derby/lib/">
 </library>
 ```
 
@@ -719,9 +714,6 @@ ${server.config.dir}/libs/custom-auth-1.0.0.jar
 **디렉토리 + 파일 조합:**
 ```xml
 <library id="MySharedLib">
-    <!-- 디렉토리의 모든 JAR -->
-    <fileset dir="/opt/commons/" includes="*.jar"/>
-    
     <!-- 추가로 특정 파일 포함 -->
     <file name="/opt/custom/mylib-1.0.0.jar"/>
     <file name="/opt/custom/yourlib-2.0.0.jar"/>
@@ -788,9 +780,8 @@ JAR 파일: custom-jni-1.0.0.jar
 **server.xml 생성 예시:**
 ```xml
 <library id="OracleDriverLib">
-    <fileset dir="${shared.resource.dir}/jdbc/oracle" 
-             includes="*.jar"/>
-    <nativeLibrary dir="/opt/oracle/instantclient_19_8"/>
+    <folder dir="${shared.resource.dir}/jdbc/oracle"/>
+    <path name="/opt/oracle/instantclient_19_8"/>
 </library>
 ```
 
@@ -891,14 +882,14 @@ JAR 파일: custom-jni-1.0.0.jar
 **단일 클래스로더 = true (기본값, 권장):**
 ```xml
 <library id="MySharedLib">
-    <fileset dir="/opt/commons/" includes="*.jar"/>
+    <folder dir="/opt/commons/" />
 </library>
 ```
 
 **단일 클래스로더 = false:**
 ```xml
 <library id="MySharedLib" useCommonClassLoader="false">
-    <fileset dir="/opt/commons/" includes="*.jar"/>
+    <folder dir="/opt/commons" />
 </library>
 ```
 
@@ -951,8 +942,7 @@ ${shared.resource.dir}/jdbc/mysql/
 
 server.xml:
 <library id="MySQLDriverLib">
-    <fileset dir="${shared.resource.dir}/jdbc/mysql" 
-             includes="*.jar"/>
+    <folder dir="${shared.resource.dir}/jdbc/mysql" />
 </library>
 ```
 
@@ -993,7 +983,7 @@ server.xml:
 
 server.xml:
 <library id="AppFrameworkLib">
-    <fileset dir="${shared.resource.dir}/spring" includes="*.jar"/>
+    <folder dir="${shared.resource.dir}/spring" />
     <file name="${shared.resource.dir}/custom/company-utils-1.0.0.jar"/>
 </library>
 ```
@@ -1024,8 +1014,7 @@ ${wlp.user.dir}/shared/resources/jdbc/mysql/
 **결과 (server.xml):**
 ```xml
 <library id="MySQLDriverLib">
-    <fileset dir="${shared.resource.dir}/jdbc/mysql" 
-             includes="*.jar"/>
+    <folder dir="${shared.resource.dir}/jdbc/mysql" />
 </library>
 
 <!-- JDBC 드라이버에서 사용 -->
@@ -1059,8 +1048,7 @@ ${wlp.user.dir}/shared/resources/commons/
 **결과 (server.xml):**
 ```xml
 <library id="ApacheCommonsLib">
-    <fileset dir="${shared.resource.dir}/commons" 
-             includes="*.jar"/>
+    <folder dir="${shared.resource.dir}/commons" />
 </library>
 
 <!-- 애플리케이션에서 사용 -->
@@ -1123,9 +1111,8 @@ ${wlp.user.dir}/shared/resources/jdbc/oracle/
 **결과 (server.xml):**
 ```xml
 <library id="OracleDriverLib">
-    <fileset dir="${shared.resource.dir}/jdbc/oracle" 
-             includes="*.jar"/>
-    <nativeLibrary dir="/opt/oracle/instantclient_19_8"/>
+    <folder dir="${shared.resource.dir}/jdbc/oracle" />
+    <path name="/opt/oracle/instantclient_19_8"/>
 </library>
 
 <jdbcDriver id="OracleDriver" 
@@ -1158,8 +1145,7 @@ ${wlp.user.dir}/shared/resources/company/
 **결과 (server.xml):**
 ```xml
 <library id="CompanyCommonLib">
-    <fileset dir="${shared.resource.dir}/company" 
-             includes="company-*.jar"/>
+    <folder dir="${shared.resource.dir}/company" />
 </library>
 
 <!-- 모든 애플리케이션에 적용 -->
@@ -1254,7 +1240,6 @@ ${shared.resource.dir}/commons/
 
 ### Liberty 공식 문서
 - [Library Configuration](https://openliberty.io/docs/latest/reference/config/library.html)
-- [Fileset Configuration](https://openliberty.io/docs/latest/reference/config/fileset.html)
 - [Classloader Configuration](https://openliberty.io/docs/latest/reference/config/classloader.html)
 - [Application Configuration](https://openliberty.io/docs/latest/reference/config/application.html)
 
@@ -1325,11 +1310,11 @@ ${shared.resource.dir}/commons/
 
 ```xml
 <library id="라이브러리ID">
-    <fileset dir="디렉토리경로" includes="*.jar"/>
+    <folder name="디렉토리경로"/>
     <!-- 또는 -->
     <file name="파일경로"/>
     <!-- 네이티브 라이브러리 (선택) -->
-    <nativeLibrary dir="네이티브경로"/>
+    <path name ="네이티브경로"/>
 </library>
 ```
 
@@ -1341,8 +1326,7 @@ ${shared.resource.dir}/commons/
 <server>
     <!-- MySQL 드라이버 -->
     <library id="MySQLDriverLib">
-        <fileset dir="${shared.resource.dir}/jdbc/mysql" 
-                 includes="*.jar"/>
+        <file name="${shared.resource.dir}/jdbc/mysql/mysql.jar"/>
     </library>
     
     <!-- JDBC 드라이버에서 사용 -->
@@ -1364,30 +1348,11 @@ ${shared.resource.dir}/commons/
 <server>
     <library id="CommonsLib">
         <!-- 여러 디렉토리 -->
-        <fileset dir="${shared.resource.dir}/commons" 
-                 includes="*.jar"/>
-        <fileset dir="${shared.resource.dir}/logging" 
-                 includes="log4j-*.jar"/>
+        <folder dir="${shared.resource.dir}/commons" />
+        <folder dir="${shared.resource.dir}/logging"/>
         
         <!-- 개별 파일 추가 -->
         <file name="${shared.resource.dir}/custom/mylib-1.0.0.jar"/>
-    </library>
-</server>
-```
-
-#### 패턴 매칭
-
-```xml
-<server>
-    <library id="SpringLib">
-        <!-- spring으로 시작하는 JAR만 -->
-        <fileset dir="${shared.resource.dir}/spring" 
-                 includes="spring-*.jar"/>
-        
-        <!-- commons로 시작하는 JAR 제외 -->
-        <fileset dir="${shared.resource.dir}/libs" 
-                 includes="*.jar"
-                 excludes="commons-*.jar"/>
     </library>
 </server>
 ```
@@ -1397,9 +1362,8 @@ ${shared.resource.dir}/commons/
 ```xml
 <server>
     <library id="OracleDriverLib">
-        <fileset dir="${shared.resource.dir}/jdbc/oracle" 
-                 includes="*.jar"/>
-        <nativeLibrary dir="/opt/oracle/instantclient_19_8"/>
+        <file name="${shared.resource.dir}/jdbc/oracle/ojdbc8.jar"/>
+        <path name="/opt/oracle/instantclient_19_8"/>
     </library>
 </server>
 ```
@@ -1410,8 +1374,7 @@ ${shared.resource.dir}/commons/
 <server>
     <!-- 단일 클래스로더 = false -->
     <library id="IsolatedLib" useCommonClassLoader="false">
-        <fileset dir="${shared.resource.dir}/isolated" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/isolated"/>
     </library>
 </server>
 ```
@@ -1423,8 +1386,7 @@ ${shared.resource.dir}/commons/
 ```xml
 <server>
     <library id="CommonsLib">
-        <fileset dir="${shared.resource.dir}/commons" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/commons"/>
     </library>
     
     <!-- 특정 애플리케이션만 -->
@@ -1439,13 +1401,11 @@ ${shared.resource.dir}/commons/
 ```xml
 <server>
     <library id="CommonsLib">
-        <fileset dir="${shared.resource.dir}/commons" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/commons"/>
     </library>
     
     <library id="LoggingLib">
-        <fileset dir="${shared.resource.dir}/logging" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/logging"/>
     </library>
     
     <application location="myapp.war">
@@ -1459,8 +1419,7 @@ ${shared.resource.dir}/commons/
 ```xml
 <server>
     <library id="GlobalLib">
-        <fileset dir="${shared.resource.dir}/global" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/global"/>
     </library>
     
     <!-- 와일드카드로 모든 WAR -->
@@ -1475,8 +1434,7 @@ ${shared.resource.dir}/commons/
 ```xml
 <server>
     <library id="CustomLib">
-        <fileset dir="${shared.resource.dir}/custom" 
-                 includes="*.jar"/>
+        <folder dir="${shared.resource.dir}/custom" />
     </library>
     
     <application location="myapp.war">
@@ -1539,8 +1497,7 @@ java.lang.NoClassDefFoundError: org/apache/commons/lang3/StringUtils
 의존 라이브러리 추가:
 ```xml
 <library id="CommonsLib">
-    <fileset dir="${shared.resource.dir}/commons" 
-             includes="*.jar"/>
+    <folder dir="${shared.resource.dir}/commons" />
     <!-- commons-lang3도 포함되어 있는지 확인 -->
 </library>
 ```
@@ -1597,9 +1554,8 @@ ls -la /opt/oracle/instantclient_19_8/
 **2. server.xml 설정:**
 ```xml
 <library id="OracleDriverLib">
-    <fileset dir="${shared.resource.dir}/jdbc/oracle" 
-             includes="*.jar"/>
-    <nativeLibrary dir="/opt/oracle/instantclient_19_8"/>
+    <folder dir="${shared.resource.dir}/jdbc/oracle"/>
+    <path name="/opt/oracle/instantclient_19_8"/>
 </library>
 ```
 
@@ -1690,14 +1646,12 @@ ${shared.resource.dir}/jackson/
 ```xml
 <!-- 권장: 단일 클래스로더 (기본값) -->
 <library id="CommonsLib">
-    <fileset dir="${shared.resource.dir}/commons" 
-             includes="*.jar"/>
+    <folder dir="${shared.resource.dir}/commons" />
 </library>
 
 <!-- 특수한 경우만: 개별 클래스로더 -->
 <library id="IsolatedLib" useCommonClassLoader="false">
-    <fileset dir="${shared.resource.dir}/isolated" 
-             includes="*.jar"/>
+    <folder dir="${shared.resource.dir}/isolated" />
 </library>
 ```
 
@@ -1708,7 +1662,7 @@ ${shared.resource.dir}/jackson/
 <variable name="LIB_ROOT" value="/opt/libs/${ENVIRONMENT}"/>
 
 <library id="EnvLib">
-    <fileset dir="${LIB_ROOT}/commons" includes="*.jar"/>
+    <folder dir="${LIB_ROOT}/commons"/>
 </library>
 ```
 
@@ -1771,9 +1725,9 @@ ${shared.resource.dir}/jackson/
 ```
 공유 라이브러리 구성:
 - ID
-- fileset (디렉토리)
+- folder (디렉토리)
 - file (개별 파일)
-- nativeLibrary (네이티브)
+- path (네이티브)
 - useCommonClassLoader
 
 클래스로더 설정:
@@ -1839,7 +1793,6 @@ cp /opt/IBM/WebSphere/AppServer/lib/mysql-connector-java.jar \
 
 ### Liberty 공식 문서
 - [Library Configuration](https://openliberty.io/docs/latest/reference/config/library.html)
-- [Fileset Configuration](https://openliberty.io/docs/latest/reference/config/fileset.html)
 - [Classloader Configuration](https://openliberty.io/docs/latest/reference/config/classloader.html)
 - [Application Configuration](https://openliberty.io/docs/latest/reference/config/application.html)
 
@@ -1862,9 +1815,9 @@ cp /opt/IBM/WebSphere/AppServer/lib/mysql-connector-java.jar \
 - 버전 통합 관리
 
 **구성 요소:**
-- 디렉토리 경로 (fileset)
+- 디렉토리 경로 (folder)
 - 파일 경로 (file)
-- 네이티브 라이브러리 (nativeLibrary)
+- 네이티브 라이브러리 (path)
 - 단일 클래스로더 옵션
 
 **모범 사례:**
