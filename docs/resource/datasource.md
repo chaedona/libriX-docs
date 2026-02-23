@@ -214,6 +214,7 @@ JDBC 제공자 (1) ←──── (N) 데이터소스
 - **jdbc-4.1**: JDBC 4.1 (Java 7+)
 - **jdbc-4.2**: JDBC 4.2 (Java 8+)
 - **jdbc-4.3**: JDBC 4.3 (Java 9+)
+- **jdbc** : JDBC 버전 정의를 하지 않고 애플리케이션 서버의 스펙에 맞게 자동설정
 
 **Liberty server.xml에서 기능 활성화:**
 ```xml
