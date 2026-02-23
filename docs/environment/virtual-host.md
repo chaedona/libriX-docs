@@ -805,8 +805,7 @@ v2.api.company.com:443
     <hostAlias>v1.api.company.com:443</hostAlias>
     <hostAlias>v2.api.company.com:443</hostAlias>
     <mimeType>
-        <type>application/json</type>
-        <extension>json</extension>
+        <type>.bar=text/bar</type>
     </mimeType>
 </virtualHost>
 ```
@@ -1586,8 +1585,7 @@ Liberty는 이미 일반적인 MIME 유형을 내장하고 있습니다. 추가 
     
     <!-- 사용자 정의 MIME 타입 -->
     <mimeType>
-        <type>application/vnd.api+json</type>
-        <extension>api</extension>
+        <type>.bar=text/bar</type>
     </mimeType>
 </virtualHost>
 ```
@@ -1691,13 +1689,11 @@ Liberty는 이미 일반적인 MIME 유형을 내장하고 있습니다. 추가 
         
         <!-- 사용자 정의 MIME 유형 -->
         <mimeType>
-            <type>application/vnd.api+json</type>
-            <extension>api</extension>
+            <type>.bar=text/bar</type>
         </mimeType>
         
         <mimeType>
-            <type>application/hal+json</type>
-            <extension>hal</extension>
+            <type>.sml=text/sml</type>>
         </mimeType>
     </virtualHost>
 </server>
