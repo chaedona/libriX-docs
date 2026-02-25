@@ -873,7 +873,7 @@ ${dmgr.profile}/config/
 ```
 데이터베이스 (주 저장소)
 + 파일 시스템 (백업)
-  ├── cells/
+  ├── /
   ├── nodes/
   └── servers/
 ```
@@ -906,16 +906,6 @@ ${dmgr.profile}/config/
 
 **동기화 모드:**
 
-**자동 동기화:**
-```
-설정: 노드 에이전트 > 자동 동기화 활성화
-
-동작:
-- 구성 변경 즉시 자동 동기화
-- 주기적 동기화 확인 (기본 1분)
-```
-
-**수동 동기화:**
 ```
 수행:
 - 노드 관리 화면에서 "동기화" 버튼 클릭
@@ -969,8 +959,8 @@ ${dmgr.profile}/config/
 3. 대상 노드로 파일 전송
    → 노드 에이전트 경유
 
-4. 서버의 애플리케이션 디렉토리에 배치
-   → ${server.config.dir}/apps/
+4. 각 노드의 애플리케이션 디렉토리에 배치
+   → 기본값 : 환경변수 ${APPS_HOME}에 배치되며, 기본값은 ${wlp.home}/apps
 
 5. 애플리케이션 시작
    → Liberty가 자동 감지 및 시작
@@ -988,7 +978,7 @@ ${dmgr.profile}/config/
    → 노드별로 병렬 처리
 
 4. 모든 멤버에서 애플리케이션 시작
-   → 동시 또는 순차 (전략에 따라)
+
 ```
 
 ### 5. 보안 및 인증
@@ -1094,19 +1084,14 @@ JVM이 클래스 파일을 찾을 추가 경로를 지정합니다.
 /opt/libs/custom-lib.jar
 ```
 
-**여러 경로 (구분자: 콜론 또는 세미콜론):**
+**여러 경로 (구분자: 공백 또는 줄바꿈):**
 ```
-Linux/Unix:
-/opt/libs/lib1.jar:/opt/libs/lib2.jar:/opt/classes
+/opt/libs/lib1.jar /opt/libs/lib2.jar
+/opt/classes
 
 Windows:
-C:\libs\lib1.jar;C:\libs\lib2.jar;C:\classes
-```
-
-**와일드카드:**
-```
-/opt/libs/*
-→ /opt/libs 디렉토리의 모든 JAR 파일
+C:\libs\lib1.jar
+C:\libs\lib2.jar C:\classes
 ```
 
 **사용 시나리오:**
@@ -1160,20 +1145,6 @@ JVM 부트스트랩 클래스로더의 클래스 경로를 지정합니다.
    └─ ${java.home}/lib/ext/
 3. Application ClassLoader
    └─ 클래스 경로
-```
-
-**입력 형식:**
-
-**앞에 추가 (prepend):**
-```
-/p:/opt/custom/boot.jar
-→ 기본 부트클래스 경로 앞에 추가
-```
-
-**뒤에 추가 (append):**
-```
-/a:/opt/custom/boot.jar
-→ 기본 부트클래스 경로 뒤에 추가
 ```
 
 **경고:**
