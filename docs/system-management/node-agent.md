@@ -41,7 +41,6 @@ WebSphere Network Deployment(ND)의 NodeAgent 개념을 Liberty 환경에 맞게
 
 특징:
 - Java 프로세스로 실행
-- SOAP 프로토콜 사용
 - 지속적인 dmgr 연결 유지
 - 파일 기반 구성 동기화
 ```
@@ -68,7 +67,7 @@ WebSphere Network Deployment(ND)의 NodeAgent 개념을 Liberty 환경에 맞게
 아키텍처:
 LibriX 환경
  └─ Deployment Manager (dmgr)
-     └─ 통신 (REST/HTTPS)
+     └─ 통신 (REST/HTTP)
          ↓
      Node: localhost.localdomain
      ├─ Node Agent ← 여기!
@@ -436,7 +435,6 @@ Node Agent의 현재 실행 상태를 표시합니다.
 - 곧 실행 상태로 전환
 
 대기:
-- 일반적으로 10-30초
 - 완료 후 STARTED로 변경
 ```
 
@@ -601,29 +599,10 @@ Node Agent는 구성 동기화의 실행 주체입니다.
    Node Agent → dmgr: "동기화 완료"
 ```
 
-**자동 vs 수동 동기화:**
-
-**자동 동기화:**
+**동기화:**
 ```
 조건:
-- Node Agent 실행 중
-- dmgr와 연결됨
-- 자동 동기화 활성화 (기본값)
-
-동작:
-- 구성 변경 즉시 자동 동기화
-- 주기적 체크 (기본 1분)
-- 사용자 개입 불필요
-
-장점:
-- 즉시 적용
-- 관리 부담 감소
-```
-
-**수동 동기화:**
-```
-조건:
-- 자동 동기화 비활성화
+- 구성 변경 이후 동기화 검토
 - 또는 수동 트리거
 
 동작:
@@ -720,18 +699,11 @@ Node Agent는 노드와 서버의 상태를 모니터링합니다.
 **모니터링 주기:**
 
 ```
-하트비트: 30초마다
-- Node Agent → dmgr
-- "나 살아있어요"
-
-상태 보고: 1분마다
-- 서버 상태
-- 리소스 사용량
-
 이벤트 기반: 즉시
 - 서버 시작/중지
 - 오류 발생
 - 구성 동기화 완료
+- 서버 상태 확인등
 ```
 
 ### 5. 로그 수집
@@ -846,11 +818,11 @@ Node Agent의 주 구성 파일입니다.
 
 **2. 관리 포트:**
 ```xml
-<httpEndpoint httpsPort="28000" host="*">
+<httpEndpoint httpPort="28000" host="*">
 
 기본 포트: 28000
 호스트: * (모든 인터페이스)
-프로토콜: HTTPS만
+프로토콜: HTTP만
 ```
 
 **3. SSL 설정:**
@@ -858,72 +830,11 @@ Node Agent의 주 구성 파일입니다.
 <ssl id="defaultSSLConfig">
 
 인증서:
-- key.jks (서버 인증서)
-- trust.jks (신뢰 저장소)
+- key.p12 (노드별 서버 인증서 및 신뢰 저장소)
 
 용도:
-- dmgr와 안전한 통신
 - 상호 인증
 ```
-
-### bootstrap.properties
-
-부트스트랩 속성 파일입니다.
-
-**파일 위치:**
-```
-${wlp.user.dir}/servers/nodeagent/bootstrap.properties
-```
-
-**주요 속성:**
-
-```properties
-# dmgr 연결 정보
-dmgr.host=dmgr.company.com
-dmgr.port=29043
-
-# 노드 정보
-node.name=localhost.localdomain
-
-# 자동 동기화
-auto.sync=true
-
-# 동기화 간격 (초)
-sync.interval=60
-
-# 로그 설정
-com.ibm.ws.logging.max.file.size=100
-com.ibm.ws.logging.max.files=10
-```
-
-**주요 속성 설명:**
-
-**dmgr.host:**
-```
-배치 관리자의 호스트 이름
-예: dmgr.company.com, 192.168.1.100
-```
-
-**dmgr.port:**
-```
-배치 관리자의 관리 포트
-기본값: 29043 (HTTPS)
-```
-
-**auto.sync:**
-```
-자동 동기화 활성화
-true: 자동 동기화 (권장)
-false: 수동 동기화만
-```
-
-**sync.interval:**
-```
-동기화 확인 간격 (초)
-기본값: 60초
-범위: 10-3600초
-```
-
 ### jvm.options
 
 JVM 옵션 파일입니다.
@@ -986,22 +897,18 @@ Server nodeagent started with process ID 12345.
    ↓
 2. 구성 로드
    - server.xml 읽기
-   - bootstrap.properties 적용
+   
    ↓
 3. 관리 서비스 시작
    - REST Connector 활성화
    - 관리 포트 오픈 (28000)
    ↓
-4. dmgr 연결
-   - dmgr.company.com:29043 연결
-   - 인증 및 등록
-   ↓
-5. 초기 동기화
+
+4. 초기 동기화
    - 구성 버전 확인
    - 필요 시 동기화 수행
    ↓
-6. 준비 완료
-   - 하트비트 시작
+5. 준비 완료
    - 관리 명령 대기
 ```
 
@@ -1076,15 +983,11 @@ Server nodeagent stopped.
    - 관리 명령 완료
    - 타임아웃: 30초
    ↓
-3. dmgr 연결 종료
-   - dmgr에 중지 알림
-   - 연결 정리
-   ↓
-4. 리소스 정리
+3. 리소스 정리
    - 포트 해제
    - 스레드 종료
    ↓
-5. JVM 종료
+4. JVM 종료
 ```
 
 **중지 시 영향:**
@@ -1123,8 +1026,7 @@ Server nodeagent started with process ID 12346.
 1. Node Agent 중지
 2. 잠시 대기 (자동)
 3. Node Agent 시작
-4. dmgr 재연결
-5. 동기화 확인
+4. 동기화 확인
 ```
 
 **재시작 필요 시:**
@@ -1201,25 +1103,16 @@ jvm.options:
 
 **증상:**
 ```
-로그: Failed to connect to deployment manager
 상태: UNKNOWN (회색)
 ```
 
 **원인:**
-1. dmgr 중지됨
-2. 네트워크 문제
-3. 방화벽 차단
-4. 잘못된 dmgr 주소
+1. 네트워크 문제
+2. 방화벽 차단
 
 **해결 방법:**
 
-**1. dmgr 상태 확인:**
-```bash
-# dmgr 실행 확인
-${wlp.install.dir}/bin/server status dmgr
-```
-
-**2. 네트워크 테스트:**
+**1. 네트워크 테스트:**
 ```bash
 # dmgr 접근 테스트
 telnet dmgr.company.com 29043
@@ -1229,7 +1122,7 @@ ping dmgr.company.com
 nslookup dmgr.company.com
 ```
 
-**3. 방화벽 확인:**
+**2. 방화벽 확인:**
 ```bash
 # 노드에서 dmgr 포트 접근 가능한지
 sudo firewall-cmd --list-all
@@ -1239,21 +1132,10 @@ sudo firewall-cmd --permanent --add-port=29043/tcp
 sudo firewall-cmd --reload
 ```
 
-**4. 구성 확인:**
-```bash
-# bootstrap.properties 확인
-cat ${wlp.user.dir}/servers/nodeagent/bootstrap.properties
-
-# dmgr 주소가 올바른지 확인
-dmgr.host=dmgr.company.com
-dmgr.port=29043
-```
-
 #### 문제 3: 동기화 실패
 
 **증상:**
 ```
-로그: Configuration synchronization failed
 노드 상태: UNSYNC (빨간색)
 ```
 
@@ -1344,7 +1226,7 @@ ${wlp.install.dir}/bin/server restart nodeagent
 특징:
 - Liberty 서버
 - REST/HTTP
-- DB + 파일 동기화
+- 파일 동기화
 - 경량 런타임
 - 메모리: 256-512MB
 
@@ -1363,7 +1245,7 @@ ${wlp.install.dir}/bin/server restart nodeagent
 | **메모리** | 512MB-1GB | 256-512MB |
 | **구성** | 복잡 | 단순 |
 | **관리** | wsadmin | 웹 콘솔 |
-| **동기화** | 파일 기반 | DB + 파일 |
+| **동기화** | 파일 기반 | 파일 기반 |
 
 ---
 
@@ -1385,10 +1267,6 @@ ${wlp.install.dir}/bin/server restart nodeagent
 ```bash
 # Node Agent 상태
 ${wlp.install.dir}/bin/server status nodeagent
-
-# dmgr 연결 확인
-tail -f ${wlp.user.dir}/servers/nodeagent/logs/messages.log | grep "deployment manager"
-```
 
 **주기적 확인:**
 ```
