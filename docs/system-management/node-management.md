@@ -4,7 +4,7 @@
 ## 목차
 
 - [개요](#개요)
-- [노드 관리 화면](#노드-관리-화면)
+- [노드 관리 화면](#노드-관리-화면)버전
 - [노드의 개념](#노드의-개념)
 - [노드 등록 (비관리 노드 추가)](#노드-등록-비관리-노드-추가)
 - [노드 삭제](#노드-삭제)
@@ -347,8 +347,8 @@ YY.Q.R.BB
 
 ```
 주의사항:
-1. 모든 노드는 동일 버전 권장
-2. 버전 불일치 시 문제 발생 가능
+1. 클러스터로 설정된 노드는 동일 버전 권장
+2. 클러스터로 설정된 노드간 버전 불일치 시 문제 발생 가능
 3. 업그레이드는 계획적으로
 
 점검 사항:
@@ -408,7 +408,7 @@ SYNC (녹색)
    ↓
 2. Node Agent에 알림
    ↓
-3. Node Agent가 자동으로 동기화
+3. "검토" 선택 후 동기화 실행
    ↓
 4. 상태: SYNC (녹색)
 
@@ -1271,34 +1271,6 @@ Liberty 서버: 실행 중 (독립 모드)
 7. 서버 재로드 → 새 데이터소스 사용 가능
 ```
 
-### 자동 동기화
-
-**Node Agent 역할:**
-
-```
-Node Agent가 활성화되어 있으면:
-
-1. dmgr의 구성 변경 감지
-   ↓
-2. 자동으로 동기화 시작
-   ↓
-3. 로컬 구성 업데이트
-   ↓
-4. 서버에 재로드 신호
-   ↓
-5. 완료 (● 녹색 유지)
-```
-
-**주기적 체크:**
-
-```
-Node Agent는 주기적으로 dmgr와 통신:
-
-간격: 1분 (기본값)
-확인: 구성 버전 비교
-동작: 불일치 시 자동 동기화
-```
-
 ### 수동 동기화
 
 **필요한 경우:**
@@ -1403,8 +1375,8 @@ ${wlp.install.dir}/bin/server start nodeagent
 
 **2. 네트워크 연결 확인:**
 ```bash
-# dmgr 접근 테스트
-telnet dmgr.company.com 29043
+# dmgr서버에서 노드로 접근 테스트
+telnet dmgr.company.com 28000
 
 # 실패 시:
 telnet: Unable to connect to remote host: Connection refused
@@ -1412,7 +1384,7 @@ telnet: Unable to connect to remote host: Connection refused
 
 **3. 방화벽 확인:**
 ```bash
-# 노드에서 dmgr로 접근 가능한지 확인
+# dmgr에서 노드로 접근 가능한지 확인
 sudo firewall-cmd --list-all
 
 # 필요 시 포트 개방
@@ -1426,16 +1398,6 @@ tail -f ${wlp.user.dir}/servers/nodeagent/logs/messages.log
 
 # 연결 오류 확인:
 [ERROR] Failed to connect to deployment manager
-```
-
-**5. dmgr 연결 정보 확인:**
-```bash
-# bootstrap.properties 확인
-cat ${wlp.user.dir}/servers/nodeagent/bootstrap.properties
-
-# dmgr 주소가 올바른지 확인
-dmgr.host=dmgr.company.com
-dmgr.port=29043
 ```
 
 #### 문제 3: 동기화 느림
@@ -1537,7 +1499,7 @@ LibriX 환경 → Deployment Manager → Node → Node Agent → Servers
 | **동기화** | syncNode 명령 | "동기화 확인" 버튼 |
 | **관리 도구** | wsadmin | 웹 관리 콘솔 |
 | **프로토콜** | SOAP | REST/HTTP |
-| **구성 저장** | XML 파일 | DB + XML |
+| **구성 저장** | XML 파일 |  XML+JSON |
 
 ### 마이그레이션
 
