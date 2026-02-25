@@ -280,7 +280,7 @@ LibriX:
 노드 에이전트 → dmgr.company.com:9043
 
 관리 콘솔 접속:
-관리자 → https://dmgr.company.com:9043/ibm/console
+관리자 → https://dmgr.company.com:9043
 ```
 
 **클릭 시:**
@@ -1893,19 +1893,7 @@ LibriX: REST over HTTPS (28011)
 ```
 
 **용도:**
-관리 콘솔 및 관리 애플리케이션의 HTTP 포트입니다.
-
-**프로토콜:** HTTP
-
-**접속:**
-```
-http://dmgr.company.com:29060/ibm/console
-```
-
-**보안:**
-- 암호화되지 않음
-- 프로덕션에서는 비활성화 또는 방화벽 차단 권장
-- WC_DEFAULTHOST_SECURE 사용 권장
+신규 노드를 dmgr에서 중앙관리하기 위해 사용하며, addNode할때 입력하는 포트 정보 입니다.
 
 **WebSphere ND 대응:**
 ```
@@ -1928,7 +1916,7 @@ LibriX: 29060
 
 **접속:**
 ```
-https://dmgr.company.com:29043/ibm/console
+https://dmgr.company.com:29043
 ```
 
 **보안:**
@@ -1938,7 +1926,6 @@ https://dmgr.company.com:29043/ibm/console
 
 **주요 용도:**
 - LibriX 관리 콘솔 접속
-- 노드 에이전트 연결
 - REST API 호출
 
 **WebSphere ND 대응:**
