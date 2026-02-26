@@ -25,7 +25,6 @@ jobs:
       # 4. docs 하위 모든 md 파일을 찾아서 각각 docx 로 변환
       - name: Convert all MD files to DOCX
         run: |
-          # docs 하위 모든 .md 파일을 배열로 수집 (while read 루프 중단 버그 방지)
           mapfile -t md_files < <(find docs -name "*.md" | sort)
 
           echo "총 변환 대상: ${#md_files[@]} 개"
@@ -42,60 +41,10 @@ jobs:
 
             echo "Converting: $md_file → $out_file"
 
-            # 전처리: 코드블록 바깥의 줄바꿈만 이어붙이기
-            # - 코드블록(``` 또는 ~~~) 안은 건드리지 않음
-            # - 빈 줄(문단 구분)은 유지
-            # - 일반 텍스트의 단순 줄바꿈은 공백으로 합침
-            python3 - "$md_file" << 'PYEOF'
-import sys, re
-
-with open(sys.argv[1], 'r', encoding='utf-8') as f:
-    lines = f.readlines()
-
-result = []
-in_code_block = False
-buffer = []
-
-def flush_buffer():
-    if buffer:
-        result.append(' '.join(l.rstrip('\n').rstrip() for l in buffer) + '\n')
-        buffer.clear()
-
-for line in lines:
-    # 코드블록 토글
-    if re.match(r'^\s*(`{3,}|~{3,})', line):
-        flush_buffer()
-        in_code_block = not in_code_block
-        result.append(line)
-        continue
-
-    if in_code_block:
-        result.append(line)
-        continue
-
-    # 빈 줄 → 문단 구분 유지
-    if line.strip() == '':
-        flush_buffer()
-        result.append('\n')
-        continue
-
-    # 헤딩, 리스트, 표, 구분선은 단독 줄 유지
-    if re.match(r'^(#{1,6} |[-*+] |\d+\. |[|]|---+|===+)', line):
-        flush_buffer()
-        result.append(line)
-        continue
-
-    # 일반 텍스트는 버퍼에 모아서 이어붙임
-    buffer.append(line)
-
-flush_buffer()
-
-with open(sys.argv[1] + '.tmp', 'w', encoding='utf-8') as f:
-    f.writelines(result)
-PYEOF
+            # 전처리: 줄바꿈 이어붙이기 (코드블록 제외)
+            python3 .github/scripts/preprocess_md.py "$md_file"
 
             # pandoc 변환
-            # -yaml_metadata_block: md 내 YAML 코드블록을 메타데이터로 오파싱 방지
             pandoc "${md_file}.tmp" \
               -o "$out_file" \
               --from markdown-hard_line_breaks-yaml_metadata_block \
