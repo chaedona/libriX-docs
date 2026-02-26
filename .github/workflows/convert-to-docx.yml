@@ -36,23 +36,12 @@ jobs:
 
             echo "Converting: $md_file → $out_file"
 
-            # 전처리: 줄바꿈 이어붙이기 (코드블록 제외)
-            python3 .github/scripts/preprocess_md.py "$md_file"
-
-            if [ ! -f "${md_file}.tmp" ]; then
-              echo "WARNING: 전처리 실패, 원본으로 변환합니다."
-              cp "$md_file" "${md_file}.tmp"
-            fi
-
-            # pandoc 변환 (저장소의 reference.docx 사용)
-            pandoc "${md_file}.tmp" \
+            pandoc "$md_file" \
               -o "$out_file" \
-              --from markdown-hard_line_breaks-yaml_metadata_block-tex_math_dollars \
+              --from markdown \
               --to docx \
-              --reference-doc=.github/scripts/reference.docx \
               --resource-path="${md_dir}:${md_dir}/images:." \
-              && rm -f "${md_file}.tmp" \
-              || { echo "WARNING: Failed to convert $md_file"; rm -f "${md_file}.tmp"; }
+              || echo "WARNING: Failed to convert $md_file"
 
           done
 
