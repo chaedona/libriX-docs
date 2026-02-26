@@ -38,7 +38,7 @@ jobs:
 
             pandoc "$md_file" \
               -o "$out_file" \
-              --from markdown \
+              --from markdown-yaml_metadata_block \
               --to docx \
               --resource-path="${md_dir}:${md_dir}/images:." \
               || echo "WARNING: Failed to convert $md_file"
