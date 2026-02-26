@@ -19,6 +19,11 @@ jobs:
       - name: Create output directory
         run: mkdir -p output
 
+      # 기본 reference.docx 생성 (페이지 여백/너비 기준 파일)
+      - name: Create reference doc
+        run: |
+          pandoc --print-default-data-file reference.docx > .github/scripts/reference.docx
+
       - name: Convert all MD files to DOCX
         run: |
           mapfile -t md_files < <(find docs -name "*.md" | sort)
@@ -39,12 +44,7 @@ jobs:
             # 전처리 실행
             python3 .github/scripts/preprocess_md.py "$md_file"
 
-            # 디버그: .tmp 파일 생성 여부 및 줄바꿈 확인
-            if [ -f "${md_file}.tmp" ]; then
-              echo "[DEBUG] .tmp 생성 성공"
-              echo "[DEBUG] 원본 줄수: $(wc -l < "$md_file")"
-              echo "[DEBUG] 전처리 후 줄수: $(wc -l < "${md_file}.tmp")"
-            else
+            if [ ! -f "${md_file}.tmp" ]; then
               echo "[DEBUG] .tmp 생성 실패! 원본으로 변환합니다."
               cp "$md_file" "${md_file}.tmp"
             fi
@@ -54,6 +54,7 @@ jobs:
               -o "$out_file" \
               --from markdown-hard_line_breaks-yaml_metadata_block-tex_math_dollars \
               --to docx \
+              --reference-doc=.github/scripts/reference.docx \
               --resource-path="${md_dir}:${md_dir}/images:." \
               && rm -f "${md_file}.tmp" \
               || { echo "WARNING: Failed to convert $md_file"; rm -f "${md_file}.tmp"; }
