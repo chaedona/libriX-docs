@@ -1,0 +1,72 @@
+name: Convert MD to DOCX
+
+on:
+  workflow_dispatch:        # 수동 실행 버튼만 사용
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 저장소 체크아웃 (이미지 포함 전체 파일)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. pandoc 설치
+      - name: Install pandoc
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y pandoc
+
+      # 3. output 디렉토리 생성
+      - name: Create output directory
+        run: mkdir -p output
+
+      # 4. docs 하위 모든 md 파일을 찾아서 각각 docx 로 변환
+      - name: Convert all MD files to DOCX
+        run: |
+          # docs 하위 모든 .md 파일 찾기
+          find docs -name "*.md" | while read md_file; do
+
+            # 파일이 있는 디렉토리 (이미지 경로 기준)
+            md_dir=$(dirname "$md_file")
+
+            # 출력 디렉토리 구조 유지 (docs/server/xxx.md → output/server/xxx.docx)
+            relative_dir="${md_dir#docs/}"
+            out_dir="output/${relative_dir}"
+            mkdir -p "$out_dir"
+
+            # 파일명 추출 (확장자 제외)
+            base_name=$(basename "$md_file" .md)
+            out_file="${out_dir}/${base_name}.docx"
+
+            echo "Converting: $md_file → $out_file"
+
+            # pandoc 변환
+            # --resource-path: md 파일 기준 상대경로 이미지 자동 검색
+            pandoc "$md_file" \
+              -o "$out_file" \
+              --from markdown \
+              --to docx \
+              --resource-path="${md_dir}:${md_dir}/images:." \
+              || echo "WARNING: Failed to convert $md_file"
+
+          done
+
+      # 5. 변환 결과 확인 (로그용)
+      - name: List converted files
+        run: |
+          echo "===== 변환된 DOCX 파일 목록 ====="
+          find output -name "*.docx" | sort
+          echo ""
+          echo "===== 총 파일 수 ====="
+          find output -name "*.docx" | wc -l
+
+      # 6. 변환된 docx 파일들을 Artifact 로 업로드
+      - name: Upload DOCX files as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: librix-docs-docx-${{ github.run_number }}
+          path: output/**/*.docx
+          retention-days: 30    # 30일간 보관
+          if-no-files-found: warn
