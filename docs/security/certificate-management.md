@@ -1,6 +1,5 @@
 # 인증서 관리 (Certificate Management)
-분석 완료했습니다! 다음 내용을 파일의 "# 인증서 관리 (Certificate Management)" 바로 아래에 삽입하세요:
-markdown# 인증서 관리 (Certificate Management)
+
 
 인증서 관리는 Liberty 서버의 SSL/TLS 인증서와 키 저장소를 관리하는 기능입니다. 키 저장소 설정, 개인 인증서(서버 인증서 + 개인키) 관리, 서명자 인증서(CA 인증서) 관리, 그리고 인증서 가져오기, 내보내기, 교체, 갱신, 폐기 방법을 설명합니다.
 
