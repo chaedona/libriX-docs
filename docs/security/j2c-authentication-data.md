@@ -1,6 +1,4 @@
 # J2C 인증 데이터 (J2C Authentication Data)
-분석 완료했습니다! 다음 내용을 파일의 "# J2C 인증 데이터 (J2C Authentication Data)" 바로 아래에 삽입하세요:
-markdown# J2C 인증 데이터 (J2C Authentication Data)
 
 J2C 인증 데이터는 Java 2 Connector (J2C) 아키텍처를 통해 외부 리소스(데이터베이스, EIS 등)에 접근할 때 사용되는 인증 정보를 관리하는 기능입니다. 별명(alias)을 통한 인증 정보 참조, 비밀번호 암호화 저장, 데이터소스 및 JMS에서의 재사용 방법을 설명합니다.
 
