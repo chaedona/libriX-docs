@@ -58,9 +58,7 @@ Liberty 서버 (JMX MBeans)
 
 2. **JMX 포트 구성** (자동 구성됨):
 ```xml
-<jmxConnector>
-    <jmxConnector id="jmx" host="*" port="9010" />
-</jmxConnector>
+<httpEndpoint host="*" httpPort="28014" httpsPort="28015" id="defaultHttpEndpoint"/>
 ```
 
 3. **LibriX 관리콘솔에서 모니터링 시작**:
