@@ -52,6 +52,7 @@ Liberty 서버 (JMX MBeans)
 ```xml
 <featureManager>
     <feature>monitor-1.0</feature>
+    <feature>requestTiming-1.0</feature>
 </featureManager>
 ```
 
