@@ -77,7 +77,6 @@ SSL 구성 관리:
 ```
 SSL 구성 관리:
 - 노드별 기본 SSL 구성
-- Server 레벨 범위
 - 키 저장소 자동 생성 또는 수동 지정
 - 단순화된 구성
 
@@ -159,10 +158,7 @@ Liberty 서버 시작 시:
 **키 저장소 위치:**
 ```
 기본 경로:
-${server.config.dir}/resources/security/key.p12
-
-또는:
-${server.output.dir}/resources/security/key.p12
+${shared.resource.dir}/resources/security/key.p12
 
 기본 비밀번호:
 자동 생성 (server.env에 저장)
@@ -1310,7 +1306,7 @@ GUI 완전 지원:
 | 항목 | WebSphere ND | Liberty (LibriX) |
 |------|--------------|------------------|
 | **SSL 구성 개수** | 다중 (무제한) | 기본 1개 |
-| **범위** | Cell/Node/Server | Server |
+| **범위** | Cell/Node/Server | Node |
 | **동적 선택** | 지원 (별명 기반) | 제한적 |
 | **키 저장소 GUI** | 완전 지원 | 제한적 |
 | **인증서 관리** | GUI 완전 지원 | 명령줄 도구 |
