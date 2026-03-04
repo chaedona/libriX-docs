@@ -2086,7 +2086,7 @@ GUI 기본 지원:
 | 항목 | WebSphere ND | Liberty (LibriX) |
 |------|--------------|------------------|
 | **키 저장소 개수** | 다중 (Cell/Node/Server) | 노드별 1개 |
-| **관리 범위** | Cell/Node/Server | Server only |
+| **관리 범위** | Cell/Node/Server | Node only |
 | **GUI 지원** | 완전 지원 | 기본 지원 |
 | **자동 생성** | 선택적 | 자동 (첫 시작 시) |
 | **CSR 생성** | GUI 지원 | 명령줄 도구 |
