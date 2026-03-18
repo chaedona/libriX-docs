@@ -242,4 +242,4 @@ Copyright (c) 2017 Eclipse Foundation AISBL. All rights reserved.
 
 ---
 
-*본 문서는 LibriX의 법적 문서입니다. 법적 효력에 대해서는 전문 법률 자문을 권장합니다.*
+*본 문서는 LibriX의 법적 문서입니다. 현재 Draft 버전이므로 최종버전으로 업데이트 필요함 .*
