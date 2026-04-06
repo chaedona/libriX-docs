@@ -21,7 +21,7 @@
 
 본 문서는 인터넷이 차단된 폐쇄망(Airgap) 환경에서 Open Liberty Feature를 설치하는 전체 시나리오를 설명합니다.
 
-제공된 쉘 스크립트(`download-liberty-features.sh`) 하나만으로 전체 Feature를 자동 미러링하고, 폐쇄망에서 Python HTTP 서버를 통해 오프라인으로 Feature를 설치하는 전체 과정을 단계별로 안내합니다.
+제공된 쉘 스크립트([`download-liberty-features.sh`](./download-liberty-features.sh)) 하나만으로 전체 Feature를 자동 미러링하고, 폐쇄망에서 Python HTTP 서버를 통해 오프라인으로 Feature를 설치하는 전체 과정을 단계별로 안내합니다.
 
 ### 1.1 전체 시나리오 흐름
 
@@ -110,7 +110,7 @@ sudo dnf install maven -y
 
 ### 2.1 스크립트 배치
 
-`download-liberty-features.sh` 파일 하나만 준비합니다. `pom.xml`은 불필요합니다.
+[`download-liberty-features.sh`](./download-liberty-features.sh) 파일 하나만 준비합니다. `pom.xml`은 불필요합니다.
 
 ```bash
 mkdir ~/liberty-feature-downloader
@@ -124,6 +124,8 @@ chmod +x download-liberty-features.sh
 > `pom.xml`은 반드시 삭제하십시오.
 
 ### 2.2 스크립트 실행
+
+[`download-liberty-features.sh`](./download-liberty-features.sh)를 실행합니다.
 
 ```bash
 ./download-liberty-features.sh 26.0.0.2
@@ -472,7 +474,7 @@ EOF
 
 ## 7. 주의사항
 
-- `download-liberty-features.sh` 스크립트는 반드시 인터넷이 연결된 상태에서 실행해야 합니다.
+- [`download-liberty-features.sh`](./download-liberty-features.sh) 스크립트는 반드시 인터넷이 연결된 상태에서 실행해야 합니다.
 - 스크립트와 같은 디렉토리에 `pom.xml`이 있으면 `{{VERSION}}` 오류가 발생합니다. `pom.xml`은 반드시 삭제하십시오.
 - HTTP 서버는 반드시 `~/liberty-mirror` 디렉토리에서 실행해야 합니다. 다른 디렉토리에서 실행하면 featureUtility가 파일을 찾지 못합니다.
 - 새 Kernel 설치 후 `featureUtility.properties`를 반드시 재설정해야 합니다. 새 설치 시 `etc` 디렉토리가 존재하지 않습니다.
