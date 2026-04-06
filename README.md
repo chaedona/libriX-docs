@@ -397,6 +397,7 @@ LibriX는 다음 데이터베이스를 공식 지원합니다:
 * ✅ **설치 가이드** 문서 추가 (2개)
 * ✅ Open Liberty 26.0.0.2 설치 전체 절차 (7단계)
 * ✅ LibriX V2.0 설치 가이드 (Open Liberty / WebSphere Liberty)
+* ✅ Lierty 서버 Airgap 설치 가이드 
   
 ### 2026-02-13 ⭐ 변경
 - ✅ 전체 문서 구조화 
