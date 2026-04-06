@@ -8,9 +8,10 @@ LibriX 관리콘솔의 전체 기능에 대한 상세 문서입니다.
 <summary><strong>📂 전체 파일 구조 보기</strong></summary>
 
 ```
-├── installation/                   # 설치 가이드 문서
-│   ├── open-liberty-install.md     # Open Liberty 설치 가이드
-│   └── libriX-install.md          # LibriX 설치 가이드
+├── installation/                        # 설치 가이드 문서
+│   ├── open-liberty-install.md          # Open Liberty 설치 가이드
+│   ├── libriX-install.md               # LibriX 설치 가이드
+│   └── open-liberty-airgap-install.md  # Open Liberty Airgap 설치 가이드
 ├── server/                         # 서버 관리 문서
 │   ├── application-server.md       # 애플리케이션 서버 관리
 │   ├── web-server.md               # 웹서버 관리
