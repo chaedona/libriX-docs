@@ -9,6 +9,8 @@ LibriX 관리콘솔의 전체 기능에 대한 상세 문서입니다.
 
 ```
 docs/
+├── installation/                   # 설치 가이드 문서
+│   └── open-liberty-install.md     # Open Liberty 설치 가이드
 ├── server/                         # 서버 관리 문서
 │   ├── application-server.md       # 애플리케이션 서버 관리
 │   ├── web-server.md               # 웹서버 관리
@@ -76,7 +78,19 @@ docs/
 </details>
 
 ## 문서 목록
+### 0. 설치
 
+**📋 설치 가이드 문서 보기**
+
+#### 0.1 [Open Liberty 설치 가이드](https://github.com/chaedona/libriX-docs/blob/main/docs/installation/open-liberty-install.md)
+
+Rocky Linux 9.4 / VMware 환경에 Open Liberty 26.0.0.2를 설치하는 방법을 설명합니다.
+
+* Java 21 설치 및 환경변수 설정
+* Open Liberty 다운로드 및 소유권 설정
+* 서버 생성 및 기동, 방화벽 설정
+* systemd 서비스 등록 (자동 시작)
+  
 ### 1. 서버 관리
 
 <details>
@@ -354,6 +368,13 @@ LibriX는 다음 데이터베이스를 공식 지원합니다:
 ---
 
 ## 최근 업데이트
+
+### 2026-04-06 ⭐ 신규
+
+* ✅ **설치 가이드** 문서 추가
+* ✅ Open Liberty 26.0.0.2 설치 전체 절차 (7단계)
+* ✅ Rocky Linux 9.4 / VMware 환경 기준
+  
 ### 2026-02-13 ⭐ 변경
 - ✅ 전체 문서 구조화 
 - ✅ 문서 목자 작성 및 부제 설정 
